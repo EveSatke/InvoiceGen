@@ -1,7 +1,7 @@
 from models.entity import Entity
 
 class JuridicalEntity(Entity):
-    def __init__(self, company_name, company_code, address, vat_payer_code=None):
+    def __init__(self, company_name: str, company_code: int, address: str, vat_payer_code: str | None = None):
         super().__init__(vat_payer_code)
         self.company_name = company_name
         self.company_code = company_code

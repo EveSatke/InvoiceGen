@@ -2,7 +2,7 @@ from models.juridical_entity import JuridicalEntity
 from models.physical_person import PhysicalPerson
 
 class Supplier:
-    def __init__(self, entity, bank_account, bank_name):
+    def __init__(self, entity: JuridicalEntity | PhysicalPerson, bank_account: str, bank_name: str):
         self.entity = entity
         self.bank_account = bank_account
         self.bank_name = bank_name
