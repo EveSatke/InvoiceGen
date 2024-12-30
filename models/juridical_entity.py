@@ -1,11 +1,11 @@
 from models.entity import Entity
 
 class JuridicalEntity(Entity):
-    def __init__(self, company_name: str, company_code: int, address: str, vat_payer_code: str | None = None):
+    def __init__(self, company_name: str, registration_code: int, address: str, vat_payer_code: str | None = None):
         super().__init__(vat_payer_code)
         self.company_name = company_name
-        self.company_code = company_code
         self.address = address
+        self.registration_code = registration_code
 
     @property
     def company_name(self):
@@ -18,16 +18,6 @@ class JuridicalEntity(Entity):
         self._company_name = value
 
     @property
-    def company_code(self):
-        return self._company_code
-    
-    @company_code.setter
-    def company_code(self, value: int):
-        if not isinstance(value, int) and len(str(value)) != 9:
-            raise ValueError("Company code must be 9 digits long")
-        self._company_code = value
-
-    @property
     def address(self):
         return self._address
 
@@ -37,6 +27,16 @@ class JuridicalEntity(Entity):
             raise ValueError("Address must be a string")
         self._address = value
 
+    @property
+    def registration_code(self):
+        return self._registration_code
+    
+    @registration_code.setter
+    def registration_code(self, value: int):
+        if not isinstance(value, int) and len(str(value)) != 9:
+            raise ValueError("Registration code must be 9 digits long")
+        self._registration_code = value
+
     def get_entity_info(self):
-        return (f"Company Name: {self.company_name}, Code: {self.company_code}, "
+        return (f"Company Name: {self.company_name}, Code: {self.registration_code}, "
                 f"Address: {self.address}, {self.get_vat_info()}")
