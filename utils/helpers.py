@@ -2,16 +2,16 @@ from colorama import Fore
 from models.item import Item
 
 
-def get_text_input(prompt) -> str:
+def get_text_input(prompt: str) -> str:
     while True:
-        text = input(prompt).strip().lower()
+        text = input(prompt).strip()
         if not text:
             print("Input cannot be empty. Please try again.")
             continue
         return text
     
 
-def get_number_input(prompt) -> int:
+def get_number_input(prompt: str) -> int:
     while True:
         try:
             user_input = int(input(prompt).strip())
@@ -19,7 +19,7 @@ def get_number_input(prompt) -> int:
         except ValueError:
             print("Input must be a number. Please try again.")
 
-def get_float_input(prompt) -> int:
+def get_float_input(prompt: str) -> int:
     while True:
         try:
             user_input = float(input(prompt).strip())
@@ -27,14 +27,14 @@ def get_float_input(prompt) -> int:
         except ValueError:
             print("Input must be a float. Please try again.")
 
-def get_vat_code(prompt) -> str:
+def get_vat_code(prompt: str) -> str:
     while True:
         vat_code = input(prompt).strip()
         if vat_code.lower() == "none" or not vat_code:
             return None
         return vat_code
     
-def get_menu_input(prompt, min_value: int, max_value: int, allow_exit: bool = False) -> int:
+def get_menu_input(prompt: str, min_value: int, max_value: int, allow_exit: bool = False) -> int:
     while True:
         user_input = input(prompt).strip()
 
@@ -49,7 +49,7 @@ def get_menu_input(prompt, min_value: int, max_value: int, allow_exit: bool = Fa
         except ValueError:
             print("Input must be a number. Please try again.")
 
-def get_confirmation(prompt) -> bool:
+def get_confirmation(prompt: str) -> bool:
     while True:
         response = input(f"{Fore.YELLOW}{prompt}{Fore.RESET}").strip().lower()
         if response in ["y", "yes"]:

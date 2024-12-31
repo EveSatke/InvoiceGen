@@ -3,7 +3,7 @@ from models.juridical_entity import JuridicalEntity
 
 
 class CsvReader:
-    def __init__(self, filename, delimiter='|'):
+    def __init__(self, filename: str, delimiter: str = '|'):
         self.filename = filename
         self.delimiter = delimiter
 

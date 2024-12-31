@@ -36,6 +36,13 @@ class Supplier:
         if not isinstance(value, str):
             raise ValueError("Bank name must be a string")
         self._bank_name = value
+
+    def to_dict(self):
+        return {
+            "entity": self.entity.to_dict(),
+            "bank_account": self.bank_account,
+            "bank_name": self.bank_name
+        }
     
     def get_supplier_info(self):
         entity_info = self.entity.get_entity_info()

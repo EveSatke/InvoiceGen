@@ -1,21 +1,21 @@
 from models.entity import Entity
 
 class JuridicalEntity(Entity):
-    def __init__(self, company_name: str, registration_code: int, address: str, vat_payer_code: str | None = None):
+    def __init__(self, name: str, registration_code: int, address: str, vat_payer_code: str | None = None):
         super().__init__(vat_payer_code)
-        self.company_name = company_name
+        self.name = name
         self.address = address
         self.registration_code = registration_code
 
     @property
-    def company_name(self):
-        return self._company_name
+    def name(self):
+        return self._name
     
-    @company_name.setter
-    def company_name(self, value: str):
+    @name.setter
+    def name(self, value: str):
         if not isinstance(value, str):
             raise ValueError("Company name must be a string")
-        self._company_name = value
+        self._name = value
 
     @property
     def address(self):
@@ -36,6 +36,14 @@ class JuridicalEntity(Entity):
         if not isinstance(value, int) and len(str(value)) != 9:
             raise ValueError("Registration code must be 9 digits long")
         self._registration_code = value
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "registration_code": self.registration_code,
+            "address": self.address,
+            "vat_code": self.vat_payer_code
+        }
 
     def get_entity_info(self):
         return (f"Company Name: {self.company_name}, Code: {self.registration_code}, "

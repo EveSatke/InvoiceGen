@@ -37,6 +37,14 @@ class PhysicalPerson(Entity):
             raise ValueError("Address must be a string")
         self._address = value
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "surname": self.surname,
+            "address": self.address,
+            "vat_code": self.vat_payer_code
+        }
+
     def get_entity_info(self):
         return (f"Name: {self.name} {self.surname}, Address: {self.address}, "
                 f"{self.get_vat_info()}") 

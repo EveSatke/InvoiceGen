@@ -1,10 +1,10 @@
 from enum import Enum
-
 from colorama import Fore
 import logging
 from constants import CREATE_SUPPLIER_HEADER, MENU_PROMPT, INVALID_OPTION_MESSAGE, INPUT_MUST_BE_NUMBER, SUPPLIER_CREATED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
 
 from input_handler import get_user_input_supplier
+from json_handler import JsonHandler
 from models.supplier import Supplier
 from utils.helpers import get_confirmation, get_menu_input
 
@@ -16,7 +16,11 @@ class SubMenuOption(Enum):
     EXIT = "Return to main menu"
 
 class SupplierManager:
-    def __init__(self):
+    FILE_PATH = "data/suppliers.json"
+
+    def __init__(self, json_handler: JsonHandler):
+        self.json_handler = json_handler
+        self.suppliers = self.json_handler.load_json(SupplierManager.FILE_PATH)
         self.sub_menu_options = {
             SubMenuOption.ADD_SUPPLIER: self._handle_add_supplier,
             SubMenuOption.VIEW_SUPPLIERS: self._handle_view_suppliers,
@@ -49,7 +53,8 @@ class SupplierManager:
         print(f"\n{CREATE_SUPPLIER_HEADER}\n{DIVIDER}")
         supplier = get_user_input_supplier()
         if get_confirmation("Save this profile? (y/n): "):
-            self._save_supplier(supplier)
+            self.json_handler.add_entry(supplier.to_dict())
+            self.json_handler.save_json(SupplierManager.FILE_PATH)
             print(SUPPLIER_CREATED_MESSAGE)
         else:
             print(SUPPLIER_NOT_SAVED_MESSAGE)
@@ -63,5 +68,3 @@ class SupplierManager:
     def _handle_return(self):
         return False
     
-    def _save_supplier(self, supplier: Supplier):
-        ...
