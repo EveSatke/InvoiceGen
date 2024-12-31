@@ -5,14 +5,22 @@ from utils.helpers import get_float_input, get_number_input, get_text_input, get
 
 
 def get_user_input_supplier():
-    supplier_name = get_text_input("Enter the name of the supplier: ")
-    supplier_address = get_text_input("Enter the address of the supplier: ")
-    supplier_registration_code = get_number_input("Enter the code of the supplier: ")
-    supplier_vat_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
-    supplier_bank_account = get_text_input("Enter the bank account of the supplier: ")
-    supplier_bank_name = get_text_input("Enter the bank name of the supplier: ")
-    entity = JuridicalEntity(supplier_name, supplier_registration_code, supplier_address, supplier_vat_code)
-    supplier = Supplier(entity, supplier_bank_account, supplier_bank_name)
+    name = get_text_input("Enter the name of the supplier: ")
+    address = get_text_input("Enter the address of the supplier: ")
+    registration_code = get_number_input("Enter the code of the supplier: ")
+    vat_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
+    bank_account = get_text_input("Enter the bank account of the supplier: ")
+    bank_name = get_text_input("Enter the bank name of the supplier: ")
+    entity = JuridicalEntity(name, registration_code, address, vat_code)
+    supplier = Supplier(entity, bank_account, bank_name)
+    return supplier
+
+def get_user_input_VAT_bank_info(name, address, registration_code):
+    vat_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
+    bank_account = get_text_input("Enter the bank account of the supplier: ")
+    bank_name = get_text_input("Enter the bank name of the supplier: ")
+    entity = JuridicalEntity(name, address, registration_code, vat_code)
+    supplier = Supplier(entity, bank_account, bank_name)
     return supplier
 
 def get_user_input_buyer():

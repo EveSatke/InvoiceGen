@@ -1,7 +1,7 @@
 from models.entity import Entity
 
 class JuridicalEntity(Entity):
-    def __init__(self, name: str, registration_code: int, address: str, vat_payer_code: str | None = None):
+    def __init__(self, name: str, address: str, registration_code: int, vat_payer_code: str | None = None):
         super().__init__(vat_payer_code)
         self.name = name
         self.address = address
@@ -40,8 +40,8 @@ class JuridicalEntity(Entity):
     def to_dict(self):
         return {
             "name": self.name,
-            "registration_code": self.registration_code,
             "address": self.address,
+            "registration_code": self.registration_code,
             "vat_code": self.vat_payer_code
         }
 

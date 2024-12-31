@@ -8,7 +8,7 @@ class JsonHandler:
     def load_json(self, filename: str) -> list:
         """Load JSON data from a file into self.data."""
         try:
-            with open(filename, 'r') as file:
+            with open(filename, 'r', encoding='utf-8') as file:
                 self.data = json.load(file)
         except FileNotFoundError:
             self.data = []
@@ -18,8 +18,8 @@ class JsonHandler:
 
     def save_json(self, filename: str) -> None:
         """Save JSON data to a file."""
-        with open(filename, 'w') as file:
-            json.dump(self.data, file, indent=4)
+        with open(filename, 'w', encoding='utf-8') as file:
+            json.dump(self.data, file, ensure_ascii=False, indent=4)
 
     def add_entry(self, entry: dict) -> None:
         """Add an entry to self.data."""
