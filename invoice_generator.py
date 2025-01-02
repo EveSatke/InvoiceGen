@@ -1,5 +1,5 @@
 from enum import Enum
-from constants import INVOICE_GENERATOR_TITLE, MENU_PROMPT
+from constants import INPUT_BETWEEN_VALUES, INVOICE_GENERATOR_TITLE, MENU_PROMPT
 from supplier_manager import SupplierManager
 from utils.helpers import get_menu_input
 from colorama import Fore
@@ -41,7 +41,7 @@ class InvoiceGenerator:
                 if self.menu_options[selected_option]() is False:
                     break
             except (IndexError, ValueError):
-                print(f"Invalid option. Please enter option 1-{len(MenuOption)}")
+                print(INPUT_BETWEEN_VALUES.format(max_option=len(MenuOption), min_value=1))
 
 
     def _display_menu(self):

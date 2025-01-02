@@ -11,7 +11,7 @@ def get_user_input_supplier():
     vat_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
     bank_account = get_text_input("Enter the bank account of the supplier: ")
     bank_name = get_text_input("Enter the bank name of the supplier: ")
-    entity = JuridicalEntity(name, registration_code, address, vat_code)
+    entity = JuridicalEntity(name, address, registration_code, vat_code)
     supplier = Supplier(entity, bank_account, bank_name)
     return supplier
 

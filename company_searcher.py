@@ -8,10 +8,16 @@ class CompanySearcher:
     def search(self, search_term: str):
         results = []
         for row in self.data:
-            if search_term in row["ja_pavadinimas"].lower() or search_term in row["ja_kodas"]:
+            try:
+                registration_code = int(row["ja_kodas"])
+            except ValueError:
+                print(f"Warning: Registration code '{row['ja_kodas']}' is not a valid integer.")
+                
+            
+            if search_term.lower() in row["ja_pavadinimas"].lower() or search_term in str(registration_code):
                 company = JuridicalEntity(
                     name = row["ja_pavadinimas"],
-                    registration_code = row["ja_kodas"],
+                    registration_code = registration_code,
                     address = row["adresas"],
                 )
                 results.append(company)

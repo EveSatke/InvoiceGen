@@ -2,7 +2,7 @@ from enum import Enum
 from colorama import Fore
 import logging
 from company_searcher import CompanySearcher
-from constants import CREATE_SUPPLIER_HEADER, MENU_PROMPT, INVALID_OPTION_MESSAGE, INPUT_MUST_BE_NUMBER, SEARCH_RESULTS_HEADER, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
+from constants import CREATE_SUPPLIER_HEADER, INPUT_BETWEEN_VALUES, MENU_PROMPT, INPUT_MUST_BE_NUMBER, MENU_PROMPT_WITH_EXIT, SEARCH_RESULTS_HEADER, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
 from csv_reader import CsvReader
 from input_handler import get_user_input_VAT_bank_info, get_user_input_supplier
 from json_handler import JsonHandler
@@ -35,6 +35,7 @@ class SupplierManager:
         }
 
     def sub_menu(self):
+        print("Entering sub_menu")  # Debugging output
         while True:
             try:
                 self._display_menu()
@@ -43,12 +44,13 @@ class SupplierManager:
                 if self.sub_menu_options[selected_option]() is False:
                     break
             except IndexError:
-                print(INVALID_OPTION_MESSAGE.format(max_option=len(SubMenuOption)))
-            except ValueError:
-                print(INPUT_MUST_BE_NUMBER)
+                print(INPUT_BETWEEN_VALUES.format(max_option=len(SubMenuOption)))
+            except ValueError as ve:
+                print("Value error:", ve) 
             except Exception as e:
                 print(UNEXPECTED_ERROR.format(error=e))
                 logging.error("Unexpected error in sub_menu", exc_info=True)
+
 
     def _display_menu(self):
         print(f"\n{SUPPLIER_MANAGER_HEADER}\n{DIVIDER}")
@@ -57,14 +59,23 @@ class SupplierManager:
 
 
     def _handle_search_add_supplier(self):
-        print(f"\n{SEARCH_SUPPLIER_HEADER}\n{DIVIDER}")
-        search_term = get_text_input("Enter supplier name or registration code to search: ")
-        print("Searching...\n")
-        results = self.company_searcher.search(search_term)
-        self._display_results(results)
-        choice = get_menu_input(MENU_PROMPT.format(max_option=len(results)), 1, len(results))
-        selected_supplier = results[choice-1]
-        self._handle_selected_supplier(selected_supplier)
+        while True:
+            print(f"\n{SEARCH_SUPPLIER_HEADER}\n{DIVIDER}")
+            search_term = get_text_input("Enter supplier name or registration code to search: ")
+            print("Searching...\n")
+            results = self.company_searcher.search(search_term)
+            if not results:
+                print("No results found. Please try a different search term.")
+                continue
+
+            self._display_results(results)
+            choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_option=len(results)), 1, len(results), allow_exit=True)
+            if choice == "q":
+                return
+
+            selected_supplier = results[choice-1]
+            self._handle_selected_supplier(selected_supplier)
+            break
         
 
     def _handle_selected_supplier(self, selected_supplier: JuridicalEntity):
@@ -80,10 +91,7 @@ class SupplierManager:
 
 
     def _display_results(self, results: list):
-        print(f"SEARCH_RESULTS_HEADER\n{DIVIDER}")
-        if not results:
-            print("No results found")
-            return
+        print(f"{SEARCH_RESULTS_HEADER}\n{DIVIDER}")
         for index, company in enumerate(results, start=1):
             print(f"{index}. Name: {company.name} | Registration code: {company.registration_code} | Address: {company.address}")
 
