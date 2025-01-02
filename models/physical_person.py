@@ -1,7 +1,7 @@
 from models.entity import Entity
 
 class PhysicalPerson(Entity):
-    def __init__(self, name, surname, address, vat_payer_code=None):
+    def __init__(self, name: str, surname: str, address: str, vat_payer_code: str | None = None):
         super().__init__(vat_payer_code)
         self.name = name
         self.surname = surname
@@ -9,7 +9,7 @@ class PhysicalPerson(Entity):
 
     @property
     def name(self):
-        return self.__name
+        return self._name
     
     @name.setter
     def name(self, value: str):
@@ -36,6 +36,14 @@ class PhysicalPerson(Entity):
         if not isinstance(value, str):
             raise ValueError("Address must be a string")
         self._address = value
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "surname": self.surname,
+            "address": self.address,
+            "vat_code": self.vat_payer_code
+        }
 
     def get_entity_info(self):
         return (f"Name: {self.name} {self.surname}, Address: {self.address}, "

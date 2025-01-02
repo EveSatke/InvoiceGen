@@ -1,31 +1,21 @@
 from models.entity import Entity
 
 class JuridicalEntity(Entity):
-    def __init__(self, company_name, company_code, address, vat_payer_code=None):
+    def __init__(self, name: str, address: str, registration_code: int, vat_payer_code: str | None = None):
         super().__init__(vat_payer_code)
-        self.company_name = company_name
-        self.company_code = company_code
+        self.name = name
         self.address = address
+        self.registration_code = registration_code
 
     @property
-    def company_name(self):
-        return self._company_name
+    def name(self):
+        return self._name
     
-    @company_name.setter
-    def company_name(self, value: str):
+    @name.setter
+    def name(self, value: str):
         if not isinstance(value, str):
             raise ValueError("Company name must be a string")
-        self._company_name = value
-
-    @property
-    def company_code(self):
-        return self._company_code
-    
-    @company_code.setter
-    def company_code(self, value: int):
-        if not isinstance(value, int) and len(str(value)) != 9:
-            raise ValueError("Company code must be 9 digits long")
-        self._company_code = value
+        self._name = value
 
     @property
     def address(self):
@@ -37,6 +27,24 @@ class JuridicalEntity(Entity):
             raise ValueError("Address must be a string")
         self._address = value
 
+    @property
+    def registration_code(self):
+        return self._registration_code
+    
+    @registration_code.setter
+    def registration_code(self, value: int):
+        if not isinstance(value, int) and len(str(value)) != 9:
+            raise ValueError("Registration code must be 9 digits long")
+        self._registration_code = value
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "address": self.address,
+            "registration_code": self.registration_code,
+            "vat_code": self.vat_payer_code
+        }
+
     def get_entity_info(self):
-        return (f"Company Name: {self.company_name}, Code: {self.company_code}, "
+        return (f"Company Name: {self.company_name}, Code: {self.registration_code}, "
                 f"Address: {self.address}, {self.get_vat_info()}")

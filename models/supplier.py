@@ -2,7 +2,7 @@ from models.juridical_entity import JuridicalEntity
 from models.physical_person import PhysicalPerson
 
 class Supplier:
-    def __init__(self, entity, bank_account, bank_name):
+    def __init__(self, entity: JuridicalEntity | PhysicalPerson, bank_account: str, bank_name: str):
         self.entity = entity
         self.bank_account = bank_account
         self.bank_name = bank_name
@@ -36,6 +36,13 @@ class Supplier:
         if not isinstance(value, str):
             raise ValueError("Bank name must be a string")
         self._bank_name = value
+
+    def to_dict(self):
+        return {
+            "entity": self.entity.to_dict(),
+            "bank_account": self.bank_account,
+            "bank_name": self.bank_name
+        }
     
     def get_supplier_info(self):
         entity_info = self.entity.get_entity_info()
