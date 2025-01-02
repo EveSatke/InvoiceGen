@@ -35,7 +35,7 @@ def get_vat_code(prompt: str) -> str:
             return None
         return vat_code
     
-def get_menu_input(prompt: str, min_value: int, max_value: int, allow_exit: bool = False) -> int:
+def get_menu_input(prompt: str, min_value: int, max_value: int, allow_exit: bool = False) -> int | str:
     while True:
         user_input = input(prompt).strip()
 
