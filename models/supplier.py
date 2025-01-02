@@ -1,8 +1,11 @@
 from models.juridical_entity import JuridicalEntity
 from models.physical_person import PhysicalPerson
+import uuid
+
 
 class Supplier:
     def __init__(self, entity: JuridicalEntity | PhysicalPerson, bank_account: str, bank_name: str):
+        self.id = uuid.uuid4()
         self.entity = entity
         self.bank_account = bank_account
         self.bank_name = bank_name
@@ -39,6 +42,7 @@ class Supplier:
 
     def to_dict(self):
         return {
+            "id": str(self.id),
             "entity": self.entity.to_dict(),
             "bank_account": self.bank_account,
             "bank_name": self.bank_name

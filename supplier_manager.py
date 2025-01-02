@@ -2,7 +2,7 @@ from enum import Enum
 from colorama import Fore
 import logging
 from company_searcher import CompanySearcher
-from constants import CREATE_SUPPLIER_HEADER, INPUT_BETWEEN_VALUES, MENU_PROMPT, INPUT_MUST_BE_NUMBER, MENU_PROMPT_WITH_EXIT, SEARCH_RESULTS_HEADER, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
+from constants import CREATE_SUPPLIER_HEADER, DELETE_SUPPLIER_HEADER, INPUT_BETWEEN_VALUES, MENU_PROMPT, INPUT_MUST_BE_NUMBER, MENU_PROMPT_WITH_EXIT, SEARCH_RESULTS_HEADER, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_DELETED_MESSAGE, SUPPLIER_LIST_HEADER, SUPPLIER_NOT_DELETED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
 from csv_reader import CsvReader
 from input_handler import get_user_input_VAT_bank_info, get_user_input_supplier
 from json_handler import JsonHandler
@@ -109,11 +109,44 @@ class SupplierManager:
             print(SUPPLIER_NOT_SAVED_MESSAGE)
 
     def _handle_view_suppliers(self):
-        ...
+        print(f"\n{SUPPLIER_LIST_HEADER}\n{DIVIDER}")
+        self._display_suppliers()
+        input(f"{Fore.YELLOW}Press Enter to continue...{Fore.RESET}")
+
 
     def _handle_delete_supplier(self):
-        ...
+        print(f"\n{DELETE_SUPPLIER_HEADER}\n{DIVIDER}")
+        self._display_suppliers()
+        choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_option=len(self.suppliers)), 1, len(self.suppliers), allow_exit=True)
+        if choice == "q":
+            return
+        selected_supplier = self.suppliers[choice-1]
+        if get_confirmation(f"\nDelete {selected_supplier['entity']['name']} profile? (y/n): "):
+            self.json_handler.delete_entry("id", selected_supplier["id"])
+            self.json_handler.save_json(SupplierManager.FILE_PATH)
+            print(f"{SUPPLIER_DELETED_MESSAGE}\n")
+        else:
+            print(SUPPLIER_NOT_DELETED_MESSAGE)
 
+    def _display_suppliers(self):
+        for index, supplier in enumerate(self.suppliers, start=1):
+            output = (
+                f"{index}. \n"
+                f"Name: {supplier['entity']['name']}\n"
+                f"Registration code: {supplier['entity']['registration_code']}\n"
+                f"Address: {supplier['entity']['address']}\n"
+            )
+
+            if supplier['entity']['vat_code']:
+                output += f"VAT code: {supplier['entity']['vat_code']}\n"
+
+            output += (
+                f"Bank account: {supplier['bank_account']}\n"
+                f"Bank name: {supplier['bank_name']}\n"
+            )
+            print(output)
+
+        
     def _handle_return(self):
         return False
     
