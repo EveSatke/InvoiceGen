@@ -35,16 +35,15 @@ class SupplierManager:
         }
 
     def sub_menu(self):
-        print("Entering sub_menu")  # Debugging output
         while True:
             try:
                 self._display_menu()
-                choice = get_menu_input(MENU_PROMPT.format(max_option=len(SubMenuOption)), 1, len(SubMenuOption))
+                choice = get_menu_input(MENU_PROMPT.format(min_value=1, max_value=len(SubMenuOption)), 1, len(SubMenuOption))
                 selected_option = list(SubMenuOption)[choice-1]
                 if self.sub_menu_options[selected_option]() is False:
                     break
             except IndexError:
-                print(INPUT_BETWEEN_VALUES.format(max_option=len(SubMenuOption)))
+                print(INPUT_BETWEEN_VALUES.format(max_value=len(SubMenuOption)))
             except ValueError as ve:
                 print("Value error:", ve) 
             except Exception as e:
@@ -68,8 +67,8 @@ class SupplierManager:
                 print("No results found. Please try a different search term.")
                 continue
 
-            self._display_results(results)
-            choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_option=len(results)), 1, len(results), allow_exit=True)
+            self.company_searcher.display_results(results)
+            choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_value=len(results)), 1, len(results), allow_exit=True)
             if choice == "q":
                 return
 
@@ -89,11 +88,6 @@ class SupplierManager:
         supplier = get_user_input_VAT_bank_info(selected_supplier.name, selected_supplier.address, selected_supplier.registration_code)
         self._save_supplier(supplier)
 
-
-    def _display_results(self, results: list):
-        print(f"{SEARCH_RESULTS_HEADER}\n{DIVIDER}")
-        for index, company in enumerate(results, start=1):
-            print(f"{index}. Name: {company.name} | Registration code: {company.registration_code} | Address: {company.address}")
 
     def _handle_add_supplier(self):
         print(f"\n{CREATE_SUPPLIER_HEADER}\n{DIVIDER}")
@@ -116,10 +110,15 @@ class SupplierManager:
 
     def _handle_delete_supplier(self):
         print(f"\n{DELETE_SUPPLIER_HEADER}\n{DIVIDER}")
+        if not self.suppliers:
+            print("No suppliers found.")
+            return
+        
         self._display_suppliers()
-        choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_option=len(self.suppliers)), 1, len(self.suppliers), allow_exit=True)
+        choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_value=len(self.suppliers)), 1, len(self.suppliers), allow_exit=True)
         if choice == "q":
             return
+        
         selected_supplier = self.suppliers[choice-1]
         if get_confirmation(f"\nDelete {selected_supplier['entity']['name']} profile? (y/n): "):
             self.json_handler.delete_entry("id", selected_supplier["id"])
@@ -128,7 +127,7 @@ class SupplierManager:
         else:
             print(SUPPLIER_NOT_DELETED_MESSAGE)
 
-    def _display_suppliers(self):
+    def display_suppliers(self):
         for index, supplier in enumerate(self.suppliers, start=1):
             output = (
                 f"{index}. \n"

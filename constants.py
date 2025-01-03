@@ -4,6 +4,10 @@ from colorama import Fore, Style
 INVOICE_GENERATOR_TITLE = f"\n{Fore.CYAN}==Invoice Generator=={Fore.RESET}"
 
 # Header and Divider
+GENERATE_INVOICE_HEADER = f"{Fore.CYAN}Generate invoice{Fore.RESET}"
+SEARCH_JURIDICAL_ENTITY_HEADER = f"{Fore.CYAN}Search juridical entity{Fore.RESET}"
+CREATE_PHYSICAL_PERSON_HEADER = f"{Fore.CYAN}Create physical person{Fore.RESET}"
+INVOICE_SUMMARY_HEADER = f"{Fore.CYAN}Invoice summary{Fore.RESET}"
 SUPPLIER_MANAGER_HEADER = f"{Fore.CYAN}Supplier manager{Fore.RESET}"
 SEARCH_SUPPLIER_HEADER = f"{Fore.CYAN}Search supplier{Fore.RESET}"
 SEARCH_RESULTS_HEADER = f"{Fore.CYAN}Search results{Fore.RESET}"
@@ -14,8 +18,8 @@ DELETE_SUPPLIER_HEADER = f"{Fore.CYAN}Delete supplier{Fore.RESET}"
 DIVIDER = f"{Fore.CYAN}--------------------------------{Fore.RESET}"
 
 # Menu Text Constants
-MENU_PROMPT = f"{Fore.YELLOW}\nChoose an option 1-{{max_option}}: {Fore.RESET}"
-MENU_PROMPT_WITH_EXIT = f"{Fore.YELLOW}\nChoose an option {{min_value}}-{{max_option}} or type 'q' to exit: {Fore.RESET}"
+MENU_PROMPT = f"{Fore.YELLOW}\nChoose an option {{min_value}}-{{max_value}}: {Fore.RESET}"
+MENU_PROMPT_WITH_EXIT = f"{Fore.YELLOW}\nChoose an option {{min_value}}-{{max_value}} or type 'q' to exit: {Fore.RESET}"
 INPUT_BETWEEN_VALUES = f"Input must be between {{min_value}} and {{max_value}}. Please try again."
 INPUT_MUST_BE_NUMBER = f"{Fore.RED}Input must be a number. Please try again.{Fore.RESET}"
 INPUT_MUST_BE_FLOAT = f"{Fore.RED}Input must be a float. Please try again.{Fore.RESET}"

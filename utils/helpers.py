@@ -52,7 +52,7 @@ def get_menu_input(prompt: str, min_value: int, max_value: int, allow_exit: bool
 
 def get_confirmation(prompt: str) -> bool:
     while True:
-        response = input(f"{Fore.YELLOW}{prompt}{Fore.RESET}").strip().lower()
+        response = input(f"{Fore.YELLOW}\n{prompt}{Fore.RESET}").strip().lower()
         if response in ["y", "yes"]:
             return True
         elif response in ["n", "no"]:

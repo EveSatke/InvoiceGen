@@ -5,12 +5,24 @@ from models.supplier import Supplier
 
 
 class Invoice:
-    def __init__(self, invoice_number: str, invoice_date: str, supplier: Supplier, entity: JuridicalEntity | PhysicalPerson,items: list[Item]):
+    def __init__(self, invoice_number: str, invoice_date: str, supplier: Supplier, entity: JuridicalEntity | PhysicalPerson,items: list[Item], sum_in_words: str):
         self.invoice_number = invoice_number
         self.invoice_date = invoice_date
         self.supplier = supplier
         self.items = items
         self.entity = entity
+        self.sum_in_words = sum_in_words
+        self.total_vat = self.calculate_total_vat()
+        self.total_amount = self.calculate_total_amount()
+
+    def calculate_total_vat(self):
+        if self.supplier.entity.vat_payer_code:
+            return sum(item.calculate_vat_amount() for item in self.items)
+        return 0
+
+    def calculate_total_amount(self):
+        total_without_vat = sum(item.price * item.quantity for item in self.items)
+        return total_without_vat + self.total_vat
 
     @property
     def invoice_number(self):
@@ -51,9 +63,3 @@ class Invoice:
         if not isinstance(value, list):
             raise ValueError("Items must be a list")
         self._items = value
-
-    def get_invoice_info(self):
-        supplier_info = self.supplier.get_supplier_info()
-        entity_info = self.entity.get_entity_info()
-        items_info = ", ".join(str(item) for item in self.items)
-        return f"Supplier: {supplier_info}, Entity: {entity_info}, Items: {items_info}"

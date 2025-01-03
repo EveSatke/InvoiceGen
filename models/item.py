@@ -1,8 +1,9 @@
 class Item:
-    def __init__(self, name:str, quantity: int, price: float):
+    def __init__(self, name:str, quantity: int, price: float, vat_rate: float):
         self.name = name
         self.quantity = quantity
         self.price = price
+        self.vat_rate = vat_rate
 
 
     @property
@@ -34,9 +35,22 @@ class Item:
         if not isinstance(value, float):
             raise ValueError("Price must be a float")
         self._price = value
+
+    @property
+    def vat_rate(self):
+        return self._vat_rate
     
+    @vat_rate.setter
+    def vat_rate(self, value: float):
+        if not isinstance(value, float):
+            raise ValueError("VAT rate must be a float")
+        self._vat_rate = value
+    
+    def calculate_vat_amount(self):
+        return self.price * self.quantity * (self.vat_rate / 100)
+
     def __str__(self):
-        return f"Item: {self.name}, Quantity: {self.quantity}, Price: {self.price}"
+        return f"Item: {self.name}, Quantity: {self.quantity}, Price: {self.price}, VAT Rate: {self.vat_rate}%"
     
     def __repr__(self):
         return f"Item: {self.name}, Quantity: {self.quantity}, Price: {self.price}"
