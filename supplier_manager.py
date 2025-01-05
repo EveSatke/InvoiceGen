@@ -25,7 +25,7 @@ class SupplierManager:
         self.json_handler = json_handler
         self.csv_reader = csv_reader
         self.company_searcher = company_searcher
-        self.suppliers = self.json_handler.load_json(SupplierManager.FILE_PATH)
+        self.suppliers = self._load_suppliers_from_json()
         self.sub_menu_options = {
             SubMenuOption.SEARCH_ADD_SUPPLIER: self._handle_search_add_supplier,
             SubMenuOption.ADD_MANUALLY_SUPPLIER: self._handle_add_supplier,
@@ -34,12 +34,32 @@ class SupplierManager:
             SubMenuOption.EXIT: self._handle_return
         }
 
+    def _load_suppliers_from_json(self) -> list[Supplier]:
+        supplier_data = self.json_handler.load_json(SupplierManager.FILE_PATH)
+        suppliers = []
+        for data in supplier_data:
+            entity_data = data['entity']
+            entity = JuridicalEntity(
+                name=entity_data['name'],
+                address=entity_data['address'],
+                registration_code=entity_data['registration_code'],
+                vat_payer_code=entity_data.get('vat_code')
+            )
+            supplier = Supplier(
+                entity=entity,
+                bank_account=data['bank_account'],
+                bank_name=data['bank_name'],
+                id=data['id']
+            )
+            suppliers.append(supplier)
+        return suppliers
+
     def sub_menu(self):
         while True:
             try:
                 self._display_menu()
                 choice = get_menu_input(MENU_PROMPT.format(min_value=1, max_value=len(SubMenuOption)), 1, len(SubMenuOption))
-                selected_option = list(SubMenuOption)[choice-1]
+                selected_option = list(SubMenuOption)[int(choice)-1]
                 if self.sub_menu_options[selected_option]() is False:
                     break
             except IndexError:
@@ -72,7 +92,7 @@ class SupplierManager:
             if choice == "q":
                 return
 
-            selected_supplier = results[choice-1]
+            selected_supplier = results[int(choice)-1]
             self._handle_selected_supplier(selected_supplier)
             break
         
@@ -104,7 +124,7 @@ class SupplierManager:
 
     def _handle_view_suppliers(self):
         print(f"\n{SUPPLIER_LIST_HEADER}\n{DIVIDER}")
-        self._display_suppliers()
+        self.display_suppliers()
         input(f"{Fore.YELLOW}Press Enter to continue...{Fore.RESET}")
 
 
@@ -114,15 +134,17 @@ class SupplierManager:
             print("No suppliers found.")
             return
         
-        self._display_suppliers()
+        self.display_suppliers()
         choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_value=len(self.suppliers)), 1, len(self.suppliers), allow_exit=True)
         if choice == "q":
             return
         
-        selected_supplier = self.suppliers[choice-1]
-        if get_confirmation(f"\nDelete {selected_supplier['entity']['name']} profile? (y/n): "):
-            self.json_handler.delete_entry("id", selected_supplier["id"])
+        selected_supplier = self.suppliers[int(choice)-1]
+        if get_confirmation(f"\nDelete {selected_supplier.entity.name} profile? (y/n): "):
+            self.json_handler.delete_entry("id", str(selected_supplier.id))
             self.json_handler.save_json(SupplierManager.FILE_PATH)
+            self.suppliers.pop(int(choice)-1)
+            
             print(f"{SUPPLIER_DELETED_MESSAGE}\n")
         else:
             print(SUPPLIER_NOT_DELETED_MESSAGE)
@@ -131,17 +153,17 @@ class SupplierManager:
         for index, supplier in enumerate(self.suppliers, start=1):
             output = (
                 f"{index}. \n"
-                f"Name: {supplier['entity']['name']}\n"
-                f"Registration code: {supplier['entity']['registration_code']}\n"
-                f"Address: {supplier['entity']['address']}\n"
+                f"Name: {supplier.entity.name}\n"
+                f"Registration code: {supplier.entity.registration_code}\n"
+                f"Address: {supplier.entity.address}\n"
             )
 
-            if supplier['entity']['vat_code']:
-                output += f"VAT code: {supplier['entity']['vat_code']}\n"
+            if supplier.entity.vat_payer_code:
+                output += f"VAT code: {supplier.entity.vat_payer_code}\n"
 
             output += (
-                f"Bank account: {supplier['bank_account']}\n"
-                f"Bank name: {supplier['bank_name']}\n"
+                f"Bank account: {supplier.bank_account}\n"
+                f"Bank name: {supplier.bank_name}\n"
             )
             print(output)
 

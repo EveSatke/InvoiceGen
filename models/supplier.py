@@ -4,8 +4,8 @@ import uuid
 
 
 class Supplier:
-    def __init__(self, entity: JuridicalEntity | PhysicalPerson, bank_account: str, bank_name: str):
-        self.id = uuid.uuid4()
+    def __init__(self, entity: JuridicalEntity, bank_account: str, bank_name: str, id: str):
+        self.id = uuid.UUID(id) if id else uuid.uuid4()
         self.entity = entity
         self.bank_account = bank_account
         self.bank_name = bank_name

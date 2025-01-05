@@ -5,7 +5,7 @@ from models.supplier import Supplier
 
 
 class Invoice:
-    def __init__(self, invoice_number: str, invoice_date: str, supplier: Supplier, entity: JuridicalEntity | PhysicalPerson,items: list[Item], sum_in_words: str):
+    def __init__(self, invoice_number: str, invoice_date: str, supplier: Supplier, items: list[Item], entity: JuridicalEntity | PhysicalPerson, sum_in_words: str):
         self.invoice_number = invoice_number
         self.invoice_date = invoice_date
         self.supplier = supplier
@@ -43,23 +43,3 @@ class Invoice:
         if not isinstance(value, str):
             raise ValueError("Invoice date must be a string")
         self._invoice_date = value
-
-    @property
-    def supplier(self):
-        return self._supplier
-
-    @supplier.setter
-    def supplier(self, value: Supplier):
-        if not isinstance(value, Supplier):
-            raise ValueError("Supplier must be a Supplier")
-        self._supplier = value
-
-    @property
-    def items(self):
-        return self._items
-    
-    @items.setter
-    def items(self, value: list[Item]):
-        if not isinstance(value, list):
-            raise ValueError("Items must be a list")
-        self._items = value

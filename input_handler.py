@@ -13,7 +13,7 @@ def get_user_input_supplier():
     bank_account = get_text_input("Enter the bank account of the supplier: ")
     bank_name = get_text_input("Enter the bank name of the supplier: ")
     entity = JuridicalEntity(name, address, registration_code, vat_code)
-    supplier = Supplier(entity, bank_account, bank_name)
+    supplier = Supplier(entity, bank_account, bank_name, id="")
     return supplier
 
 def get_user_input_VAT_bank_info(name, address, registration_code):
@@ -21,7 +21,7 @@ def get_user_input_VAT_bank_info(name, address, registration_code):
     bank_account = get_text_input("Enter the bank account of the supplier: ")
     bank_name = get_text_input("Enter the bank name of the supplier: ")
     entity = JuridicalEntity(name, address, registration_code, vat_code)
-    supplier = Supplier(entity, bank_account, bank_name)
+    supplier = Supplier(entity, bank_account, bank_name, id="")
     return supplier
 
 def get_user_input_juridical_buyer(client_name, client_address, client_code) -> JuridicalEntity:
@@ -40,13 +40,13 @@ def get_user_input_physical_person_buyer() -> PhysicalPerson:
 def get_item_input(supplier: Supplier) -> list[Item]:
     items = []
     while True:
-        name = input("Enter item description: ").strip()
+        name = get_text_input("Enter item description: ")
         quantity = get_number_input("Enter item quantity: ")
         price = get_float_input("Enter item price: ")
 
         # Ask for VAT rate only if the supplier is a VAT payer
         vat_rate = 0.0
-        if supplier["entity"]["vat_code"]:
+        if supplier.entity.vat_payer_code:
             vat_rate = get_float_input("Enter item VAT rate (21, 9, 5, 0): ")
 
         item = Item(name, quantity, price, vat_rate)

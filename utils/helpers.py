@@ -20,7 +20,7 @@ def get_number_input(prompt: str) -> int:
         except ValueError:
             print(INPUT_MUST_BE_NUMBER)
 
-def get_float_input(prompt: str) -> int:
+def get_float_input(prompt: str) -> float:
     while True:
         try:
             user_input = float(input(prompt).strip())

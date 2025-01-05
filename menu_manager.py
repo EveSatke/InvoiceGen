@@ -39,11 +39,12 @@ class MenuManager:
             self._display_menu()
             choice = get_menu_input(MENU_PROMPT.format(min_value=1, max_value=len(MenuOption)), 1, len(MenuOption))
             try:
-                selected_option = list(MenuOption)[choice-1]
+                selected_option = list(MenuOption)[int(choice)-1]
                 if self.menu_options[selected_option]() is False:
                     break
-            except (IndexError, ValueError):
+            except (IndexError, ValueError) as e:
                 print(INPUT_BETWEEN_VALUES.format(min_value=1, max_value=len(MenuOption)))
+                print(e)
 
 
     def _display_menu(self):

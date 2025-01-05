@@ -50,18 +50,19 @@ class InvoiceGenerator:
             # Logic to save or generate the invoice PDF
             pass
 
-    def _select_supplier(self) -> Supplier:
+    def _select_supplier(self) -> Optional[Supplier]:
         print(f"\n{GENERATE_INVOICE_HEADER}\n{DIVIDER}")
         print(f"{Fore.YELLOW}Step 1:{Fore.RESET} Select Supplier")
         if not self.supplier_manager.suppliers:
             print(f"{Fore.YELLOW}No suppliers found. Please create a supplier first.{Fore.RESET}")
-            return
+            return 
         
         self.supplier_manager.display_suppliers()
         choice = get_menu_input(MENU_PROMPT_WITH_EXIT.format(min_value=1, max_value=len(self.supplier_manager.suppliers)), 1, len(self.supplier_manager.suppliers), allow_exit=True)
         if choice == "q":
-            return
-        selected_supplier = self.supplier_manager.suppliers[choice-1]
+            return 
+        selected_supplier = self.supplier_manager.suppliers[int(choice)-1]
+        print(selected_supplier)
         return selected_supplier
 
     def _select_buyer_type(self):
@@ -76,7 +77,7 @@ class InvoiceGenerator:
             return self._handle_physical_person_buyer()
         else:
             print("Invalid choice. Please try again.")
-            return self.select_buyer_type()
+            return self._select_buyer_type()
         
     def _handle_search_juridical_buyer(self) -> JuridicalEntity:
         while True:
@@ -93,7 +94,7 @@ class InvoiceGenerator:
             if choice == "q":
                 return
 
-            selected_entity = results[choice-1]
+            selected_entity = results[int(choice)-1]
             juridical_entity = get_user_input_juridical_buyer(selected_entity.name, selected_entity.address, selected_entity.registration_code)
             return juridical_entity
 
@@ -112,12 +113,12 @@ class InvoiceGenerator:
         print(f"\n{INVOICE_SUMMARY_HEADER}\n{DIVIDER}")
         print(
             f"{Fore.YELLOW}Supplier:\n{Fore.RESET}"
-            f"Name: {supplier["entity"]["name"]}\n"
-            f"Address: {supplier["entity"]['address']}\n"
-            f"Registration code: {supplier["entity"]['registration_code']}\n"
-            f"VAT code: {supplier["entity"]["vat_code"]}\n"
-            f"Bank account: {supplier['bank_account']}\n"
-            f"Bank name: {supplier['bank_name']}\n"   
+            f"Name: {supplier.entity.name}\n"
+            f"Address: {supplier.entity.address}\n"
+            f"Registration code: {supplier.entity.registration_code}\n"
+            f"VAT code: {supplier.entity.vat_payer_code}\n"
+            f"Bank account: {supplier.bank_account}\n"
+            f"Bank name: {supplier.bank_name}\n"   
             )
         print(f"{Fore.YELLOW}Buyer: {Fore.RESET}")
         if isinstance(buyer, JuridicalEntity):
@@ -136,10 +137,8 @@ class InvoiceGenerator:
                 )
        
         print(f"{Fore.YELLOW}Items: {Fore.RESET}")
-        total_amount = 0
         for index, item in enumerate(items, start=1):
             print(f"{index}. {item.name} - {item.quantity} X {item.price} EUR = {item.price * item.quantity} EUR")
-            total_amount += item.price * item.quantity
+        if supplier.entity.vat_payer_code:
+            print(f"\nTotal VAT: {total_vat} EUR")
         print(f"{Fore.YELLOW}\nTotal Amount: {total_amount} EUR{Fore.RESET}")
-        total_amount = self.invoice.total_amount
-

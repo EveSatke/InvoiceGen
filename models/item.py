@@ -1,5 +1,5 @@
 class Item:
-    def __init__(self, name:str, quantity: int, price: float, vat_rate: float):
+    def __init__(self, name:str, quantity: int, price: float, vat_rate: float=0):
         self.name = name
         self.quantity = quantity
         self.price = price
@@ -53,4 +53,4 @@ class Item:
         return f"Item: {self.name}, Quantity: {self.quantity}, Price: {self.price}, VAT Rate: {self.vat_rate}%"
     
     def __repr__(self):
-        return f"Item: {self.name}, Quantity: {self.quantity}, Price: {self.price}"
+        return f"Item: {self.name}, Quantity: {self.quantity}, Price: {self.price}, VAT Rate: {self.vat_rate}%"

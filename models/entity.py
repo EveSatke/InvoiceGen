@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class Entity(ABC):
-    def __init__(self, vat_payer_code=None):
+    def __init__(self, vat_payer_code=""):
         self.vat_payer_code = vat_payer_code
 
     @property
