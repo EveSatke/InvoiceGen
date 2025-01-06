@@ -118,6 +118,7 @@ class SupplierManager:
         if get_confirmation("\nSave this profile? (y/n): "):
             self.json_handler.add_entry(supplier.to_dict())
             self.json_handler.save_json(SupplierManager.FILE_PATH)
+            self.suppliers = self._load_suppliers_from_json()
             print(SUPPLIER_CREATED_MESSAGE)
         else:
             print(SUPPLIER_NOT_SAVED_MESSAGE)
@@ -143,8 +144,7 @@ class SupplierManager:
         if get_confirmation(f"\nDelete {selected_supplier.entity.name} profile? (y/n): "):
             self.json_handler.delete_entry("id", str(selected_supplier.id))
             self.json_handler.save_json(SupplierManager.FILE_PATH)
-            self.suppliers.pop(int(choice)-1)
-            
+            self.suppliers = self._load_suppliers_from_json()            
             print(f"{SUPPLIER_DELETED_MESSAGE}\n")
         else:
             print(SUPPLIER_NOT_DELETED_MESSAGE)

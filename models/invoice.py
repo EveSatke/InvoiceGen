@@ -2,18 +2,20 @@ from models.item import Item
 from models.juridical_entity import JuridicalEntity
 from models.physical_person import PhysicalPerson
 from models.supplier import Supplier
+from num2words import num2words
 
 
 class Invoice:
-    def __init__(self, invoice_number: str, invoice_date: str, supplier: Supplier, items: list[Item], entity: JuridicalEntity | PhysicalPerson, sum_in_words: str):
+    def __init__(self, invoice_number: str, invoice_date: str, supplier: Supplier, items: list[Item], buyer: JuridicalEntity | PhysicalPerson):
         self.invoice_number = invoice_number
         self.invoice_date = invoice_date
         self.supplier = supplier
         self.items = items
-        self.entity = entity
-        self.sum_in_words = sum_in_words
+        self.buyer = buyer
         self.total_vat = self.calculate_total_vat()
         self.total_amount = self.calculate_total_amount()
+        self.sum_in_words = num2words(self.total_amount, to='currency', lang="lt", currency="EUR")
+
 
     def calculate_total_vat(self):
         if self.supplier.entity.vat_payer_code:

@@ -1,4 +1,6 @@
+from datetime import datetime
 from enum import Enum
+from typing import Optional
 from colorama import Fore
 from company_searcher import CompanySearcher
 from constants import CREATE_PHYSICAL_PERSON_HEADER, DIVIDER, GENERATE_INVOICE_HEADER, INVOICE_SUMMARY_HEADER, MENU_PROMPT, MENU_PROMPT_WITH_EXIT, SEARCH_JURIDICAL_ENTITY_HEADER
@@ -28,27 +30,28 @@ class InvoiceGenerator:
 
         buyer = self._select_buyer_type()
         items = self._add_invoice_items(supplier)
+        invoice_date = datetime.now().strftime("%Y-%m-%d")
         
-        # Create an Invoice object
         invoice = Invoice(
             invoice_number="INV-001",  # Example invoice number
-            invoice_date="2023-10-01",  # Example invoice date
+            invoice_date=invoice_date,  # Example invoice date
             supplier=supplier,
-            entity=buyer,
+            buyer=buyer,
             items=items,
-            sum_in_words="One hundred euros"  # Example sum in words
-        )
+            )
 
-        # Use the Invoice methods to calculate VAT and total
         total_vat = invoice.calculate_total_vat()
         total_amount = invoice.calculate_total_amount()
+        print(invoice.sum_in_words)
 
-        # Display the invoice summary
         self._get_invoice_summary(supplier, buyer, items, total_vat, total_amount)
 
         if get_confirmation("Generate this invoice? (y/n): "):
             # Logic to save or generate the invoice PDF
             pass
+    
+    def _generate_invoice_number(self) -> str:
+        ...
 
     def _select_supplier(self) -> Optional[Supplier]:
         print(f"\n{GENERATE_INVOICE_HEADER}\n{DIVIDER}")
@@ -77,9 +80,8 @@ class InvoiceGenerator:
             return self._handle_physical_person_buyer()
         else:
             print("Invalid choice. Please try again.")
-            return self._select_buyer_type()
         
-    def _handle_search_juridical_buyer(self) -> JuridicalEntity:
+    def _handle_search_juridical_buyer(self) -> Optional[JuridicalEntity]:
         while True:
             print(f"\n{SEARCH_JURIDICAL_ENTITY_HEADER}\n{DIVIDER}")
             search_term = get_text_input("Enter company name or registration code to search: ")
@@ -110,35 +112,44 @@ class InvoiceGenerator:
         return items
     
     def _get_invoice_summary(self, supplier: Supplier, buyer: JuridicalEntity | PhysicalPerson, items: list[Item], total_vat: float, total_amount: float):
-        print(f"\n{INVOICE_SUMMARY_HEADER}\n{DIVIDER}")
-        print(
-            f"{Fore.YELLOW}Supplier:\n{Fore.RESET}"
-            f"Name: {supplier.entity.name}\n"
-            f"Address: {supplier.entity.address}\n"
-            f"Registration code: {supplier.entity.registration_code}\n"
-            f"VAT code: {supplier.entity.vat_payer_code}\n"
-            f"Bank account: {supplier.bank_account}\n"
-            f"Bank name: {supplier.bank_name}\n"   
+        def print_supplier_details(supplier: Supplier):
+            print(
+                f"{Fore.YELLOW}Supplier:\n{Fore.RESET}"
+                f"Name: {supplier.entity.name}\n"
+                f"Address: {supplier.entity.address}\n"
+                f"Registration code: {supplier.entity.registration_code}\n"
+                f"VAT code: {supplier.entity.vat_payer_code}\n"
+                f"Bank account: {supplier.bank_account}\n"
+                f"Bank name: {supplier.bank_name}\n"
             )
-        print(f"{Fore.YELLOW}Buyer: {Fore.RESET}")
-        if isinstance(buyer, JuridicalEntity):
-            print(
-                f"Name: {buyer.name}\n"
-                f"Address: {buyer.address}\n  "
-                f"Registration code: {buyer.registration_code}\n"
-                f"VAT payer code: {buyer.vat_payer_code}\n"
+
+        def print_buyer_details(buyer: JuridicalEntity | PhysicalPerson):
+            print(f"{Fore.YELLOW}Buyer: {Fore.RESET}")
+            if isinstance(buyer, JuridicalEntity):
+                print(
+                    f"Name: {buyer.name}\n"
+                    f"Address: {buyer.address}\n"
+                    f"Registration code: {buyer.registration_code}\n"
+                    f"VAT payer code: {buyer.vat_payer_code}\n"
                 )
-        elif isinstance(buyer, PhysicalPerson):
-            print(
-                f"Name: {buyer.name}\n"
-                f"Surname: {buyer.surname}\n"
-                f"Address: {buyer.address}\n"
-                f"VAT payer code: {buyer.vat_payer_code}\n"
+            elif isinstance(buyer, PhysicalPerson):
+                print(
+                    f"Name: {buyer.name}\n"
+                    f"Surname: {buyer.surname}\n"
+                    f"Address: {buyer.address}\n"
+                    f"VAT payer code: {buyer.vat_payer_code}\n"
                 )
-       
-        print(f"{Fore.YELLOW}Items: {Fore.RESET}")
-        for index, item in enumerate(items, start=1):
-            print(f"{index}. {item.name} - {item.quantity} X {item.price} EUR = {item.price * item.quantity} EUR")
+
+        def print_items_details(items: list[Item]):
+            print(f"{Fore.YELLOW}Items: {Fore.RESET}")
+            for index, item in enumerate(items, start=1):
+                print(f"{index}. {item.name} - {item.quantity} X {item.price} EUR = {item.price * item.quantity} EUR")
+
+        print(f"\n{INVOICE_SUMMARY_HEADER}\n{DIVIDER}")
+        print_supplier_details(supplier)
+        print_buyer_details(buyer)
+        print_items_details(items)
+
         if supplier.entity.vat_payer_code:
             print(f"\nTotal VAT: {total_vat} EUR")
         print(f"{Fore.YELLOW}\nTotal Amount: {total_amount} EUR{Fore.RESET}")
