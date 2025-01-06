@@ -1,6 +1,6 @@
 from enum import Enum
 from constants import INPUT_BETWEEN_VALUES, INVOICE_GENERATOR_TITLE, MENU_PROMPT
-from invoice_generator import InvoiceGenerator
+from invoice_manager import InvoiceManager
 from supplier_manager import SupplierManager
 from utils.helpers import get_menu_input
 from colorama import Fore
@@ -24,9 +24,9 @@ class MenuOption(Enum):
     EXIT = "Exit"
 
 class MenuManager:
-    def __init__(self, supplier_manager: SupplierManager, invoice_generator: InvoiceGenerator):
+    def __init__(self, supplier_manager: SupplierManager, invoice_manager: InvoiceManager):
         self.supplier_manager = supplier_manager
-        self.invoice_generator = invoice_generator
+        self.invoice_manager = invoice_manager
         self.menu_options = {
             MenuOption.ADD_INVOICE: self._handle_add_invoice,
             MenuOption.VIEW_INVOICES: self._handle_view_invoices,
@@ -54,7 +54,7 @@ class MenuManager:
 
 
     def _handle_add_invoice(self):
-        self.invoice_generator.generate_invoice()
+        self.invoice_manager.generate_invoice()
         return True
 
     def _handle_view_invoices(self):

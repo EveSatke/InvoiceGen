@@ -3,7 +3,6 @@ from colorama import Fore
 import logging
 from company_searcher import CompanySearcher
 from constants import CREATE_SUPPLIER_HEADER, DELETE_SUPPLIER_HEADER, INPUT_BETWEEN_VALUES, MENU_PROMPT, INPUT_MUST_BE_NUMBER, MENU_PROMPT_WITH_EXIT, SEARCH_RESULTS_HEADER, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_DELETED_MESSAGE, SUPPLIER_LIST_HEADER, SUPPLIER_NOT_DELETED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
-from csv_reader import CsvReader
 from input_handler import get_user_input_VAT_bank_info, get_user_input_supplier
 from json_handler import JsonHandler
 from models.juridical_entity import JuridicalEntity
@@ -21,9 +20,8 @@ class SubMenuOption(Enum):
 class SupplierManager:
     FILE_PATH = "data/suppliers.json"
 
-    def __init__(self, json_handler: JsonHandler, csv_reader: CsvReader, company_searcher: CompanySearcher):
+    def __init__(self, json_handler: JsonHandler, company_searcher: CompanySearcher):
         self.json_handler = json_handler
-        self.csv_reader = csv_reader
         self.company_searcher = company_searcher
         self.suppliers = self._load_suppliers_from_json()
         self.sub_menu_options = {

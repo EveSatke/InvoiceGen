@@ -19,12 +19,14 @@ class Invoice:
 
     def calculate_total_vat(self):
         if self.supplier.entity.vat_payer_code:
-            return sum(item.calculate_vat_amount() for item in self.items)
-        return 0
+            total_vat = sum(item.calculate_vat_amount() for item in self.items)
+            return round(total_vat, 2)
+        return 0.00
 
     def calculate_total_amount(self):
         total_without_vat = sum(item.price * item.quantity for item in self.items)
-        return total_without_vat + self.total_vat
+        total_amount = total_without_vat + self.total_vat
+        return round(total_amount, 2)
 
     @property
     def invoice_number(self):
