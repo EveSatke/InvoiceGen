@@ -14,7 +14,6 @@ async def start():
     # print("Downloading companies list file... Please wait...")
     # downloader = CompanyListDownloader(URL, FILENAME)
     # await downloader.download()
-    # print(get_user_input())
     ...
 
 class MenuOption(Enum):
@@ -58,6 +57,7 @@ class MenuManager:
         return True
 
     def _handle_view_invoices(self):
+        self.invoice_manager.view_invoices()
         return True
 
     def _handle_manage_suppliers(self):

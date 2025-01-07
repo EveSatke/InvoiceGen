@@ -42,7 +42,7 @@ class PhysicalPerson(Entity):
             "name": self.name,
             "surname": self.surname,
             "address": self.address,
-            "vat_code": self.vat_payer_code
+            "vat_payer_code": self.vat_payer_code
         }
 
     def get_entity_info(self):

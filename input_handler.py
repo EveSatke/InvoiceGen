@@ -9,32 +9,32 @@ def get_user_input_supplier():
     name = get_text_input("Enter the name of the supplier: ")
     address = get_text_input("Enter the address of the supplier: ")
     registration_code = get_number_input("Enter the code of the supplier: ")
-    vat_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
+    vat_payer_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
     bank_account = get_text_input("Enter the bank account of the supplier: ")
     bank_name = get_text_input("Enter the bank name of the supplier: ")
-    entity = JuridicalEntity(name, address, registration_code, vat_code)
+    entity = JuridicalEntity(name, address, registration_code, vat_payer_code)
     supplier = Supplier(entity, bank_account, bank_name, id="")
     return supplier
 
 def get_user_input_VAT_bank_info(name, address, registration_code):
-    vat_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
+    vat_payer_code = get_vat_code("Enter the VAT code of the supplier (Leave empty or type 'none' if not a VAT payer): ")
     bank_account = get_text_input("Enter the bank account of the supplier: ")
     bank_name = get_text_input("Enter the bank name of the supplier: ")
-    entity = JuridicalEntity(name, address, registration_code, vat_code)
+    entity = JuridicalEntity(name, address, registration_code, vat_payer_code)
     supplier = Supplier(entity, bank_account, bank_name, id="")
     return supplier
 
 def get_user_input_juridical_buyer(client_name, client_address, client_code) -> JuridicalEntity:
-    client_vat_code = get_vat_code("Enter the VAT code of the client (Leave empty or type 'none' if not a VAT payer): ")
-    entity = JuridicalEntity(client_name, client_address, client_code, client_vat_code)
+    buyer_vat_code = get_vat_code("Enter the VAT code of the client (Leave empty or type 'none' if not a VAT payer): ")
+    entity = JuridicalEntity(client_name, client_address, client_code, buyer_vat_code)
     return entity
 
 def get_user_input_physical_person_buyer() -> PhysicalPerson:
     name = get_text_input("Enter the name of the client: ")
     surname = get_text_input("Enter the surname of the client: ")
     address = get_text_input("Enter the address of the client: ")
-    vat_code = get_vat_code("Enter the VAT code of the client (Leave empty or type 'none' if not a VAT payer): ")
-    person = PhysicalPerson(name, surname, address, vat_code)
+    vat_payer_code = get_vat_code("Enter the VAT code of the client (Leave empty or type 'none' if not a VAT payer): ")
+    person = PhysicalPerson(name, surname, address, vat_payer_code)
     return person
 
 def get_item_input(supplier: Supplier) -> list[Item]:

@@ -48,6 +48,14 @@ class Item:
     
     def calculate_vat_amount(self):
         return self.price * self.quantity * (self.vat_rate / 100)
+    
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "quantity": self.quantity,
+            "price": self.price,
+            "vat_rate": self.vat_rate
+        }
 
     def __str__(self):
         return f"Item: {self.name}, Quantity: {self.quantity}, Price: {self.price}, VAT Rate: {self.vat_rate}%"

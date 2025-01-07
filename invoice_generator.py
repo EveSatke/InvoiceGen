@@ -2,6 +2,9 @@ from colorama import Fore
 from weasyprint import HTML
 from models.invoice import Invoice
 import os
+from models.juridical_entity import JuridicalEntity
+from datetime import datetime
+
 
 class InvoiceGenerator:
     def __init__(self, base_directory: str):
@@ -16,7 +19,8 @@ class InvoiceGenerator:
             os.makedirs(supplier_directory, exist_ok=True)
 
             # Define the filename using the invoice number
-            filename = f"Saskaita_{invoice.invoice_number}.pdf"
+            invoice_date = datetime.now().strftime("%Y-%m-%d")
+            filename = f"Saskaita_{invoice.invoice_number}_{invoice_date}.pdf"
             file_path = os.path.join(supplier_directory, filename)
 
             # Generate the PDF
@@ -125,7 +129,7 @@ class InvoiceGenerator:
                             <div class="section-title">Tiekėjas:</div>
                             {invoice.supplier.entity.name}<br>
                             {invoice.supplier.entity.address}<br>
-                            Įmonės kodas: {invoice.supplier.entity.registration_code}<br>
+                            Įmonės kodas: {invoice.supplier.entity.registration_code if isinstance(invoice.supplier.entity, JuridicalEntity) else ""}<br>
                             Sąskaitos numeris: {invoice.supplier.bank_account}<br>
                             Bankas: {invoice.supplier.bank_name}<br>
                             {"PVM kodas: " + supplier_vat_code if supplier_vat_code else ""}<br>

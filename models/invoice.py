@@ -47,3 +47,15 @@ class Invoice:
         if not isinstance(value, str):
             raise ValueError("Invoice date must be a string")
         self._invoice_date = value
+
+    def to_dict(self):
+        return {
+            "invoice_number": self.invoice_number,
+            "invoice_date": self.invoice_date,
+            "supplier": self.supplier.to_dict(),
+            "buyer": self.buyer.to_dict(),
+            "items": [item.to_dict() for item in self.items],
+            "total_vat": self.total_vat,
+            "total_amount": self.total_amount,
+            "sum_in_words": self.sum_in_words
+        }

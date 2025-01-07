@@ -11,16 +11,6 @@ class Supplier:
         self.bank_name = bank_name
 
     @property
-    def entity(self):
-        return self._entity
-    
-    @entity.setter
-    def entity(self, value: JuridicalEntity | PhysicalPerson):
-        if not isinstance(value, (JuridicalEntity, PhysicalPerson)):
-            raise ValueError("Entity must be a JuridicalEntity or PhysicalPerson")
-        self._entity = value
-
-    @property
     def bank_account(self):
         return self._bank_account
     

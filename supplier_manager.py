@@ -41,7 +41,7 @@ class SupplierManager:
                 name=entity_data['name'],
                 address=entity_data['address'],
                 registration_code=entity_data['registration_code'],
-                vat_payer_code=entity_data.get('vat_code')
+                vat_payer_code=entity_data.get('vat_payer_code')
             )
             supplier = Supplier(
                 entity=entity,
@@ -114,8 +114,7 @@ class SupplierManager:
 
     def _save_supplier(self, supplier: Supplier):
         if get_confirmation("\nSave this profile? (y/n): "):
-            self.json_handler.add_entry(supplier.to_dict())
-            self.json_handler.save_json(SupplierManager.FILE_PATH)
+            self.json_handler.save(SupplierManager.FILE_PATH, supplier.to_dict())
             self.suppliers = self._load_suppliers_from_json()
             print(SUPPLIER_CREATED_MESSAGE)
         else:
@@ -140,8 +139,7 @@ class SupplierManager:
         
         selected_supplier = self.suppliers[int(choice)-1]
         if get_confirmation(f"\nDelete {selected_supplier.entity.name} profile? (y/n): "):
-            self.json_handler.delete_entry("id", str(selected_supplier.id))
-            self.json_handler.save_json(SupplierManager.FILE_PATH)
+            self.json_handler.delete_entry(SupplierManager.FILE_PATH, "id", str(selected_supplier.id))
             self.suppliers = self._load_suppliers_from_json()            
             print(f"{SUPPLIER_DELETED_MESSAGE}\n")
         else:
@@ -157,7 +155,7 @@ class SupplierManager:
             )
 
             if supplier.entity.vat_payer_code:
-                output += f"VAT code: {supplier.entity.vat_payer_code}\n"
+                output += f"VAT payer code: {supplier.entity.vat_payer_code}\n"
 
             output += (
                 f"Bank account: {supplier.bank_account}\n"
