@@ -79,6 +79,7 @@ class InvoiceGenerator:
                     .invoice-section .section-title {{
                         font-weight: bold;
                         margin-bottom: 5px;
+                        text-transform: uppercase;
                     }}
                     table {{
                         width: 100%;
@@ -127,19 +128,19 @@ class InvoiceGenerator:
                     <div class="invoice-section">
                         <div>
                             <div class="section-title">Tiekėjas:</div>
-                            {invoice.supplier.entity.name}<br>
+                            <strong>{invoice.supplier.entity.name}</strong><br>
                             {invoice.supplier.entity.address}<br>
-                            Įmonės kodas: {invoice.supplier.entity.registration_code if isinstance(invoice.supplier.entity, JuridicalEntity) else ""}<br>
-                            Sąskaitos numeris: {invoice.supplier.bank_account}<br>
-                            Bankas: {invoice.supplier.bank_name}<br>
+                            <strong>Įmonės kodas:</strong> {invoice.supplier.entity.registration_code if isinstance(invoice.supplier.entity, JuridicalEntity) else ""}<br>
+                            <strong>Sąskaitos numeris:</strong> {invoice.supplier.bank_account}<br>
+                            <strong>Bankas:</strong> {invoice.supplier.bank_name.capitalize()}<br>
                             {"PVM kodas: " + supplier_vat_code if supplier_vat_code else ""}<br>
                         </div>
                         <div class="buyer-details">
                             <div class="section-title">Pirkėjas:</div>
-                            {invoice.buyer.name} {buyer_surname if buyer_surname else ""}<br>
+                            <strong>{invoice.buyer.name.capitalize()} {buyer_surname.capitalize() if buyer_surname else ""}</strong><br>
                             {invoice.buyer.address}<br>
-                            {f"Įmonės kodas: {buyer_registration_code}<br>" if buyer_registration_code else ""}
-                            {f"PVM kodas: {buyer_vat_code}<br>" if buyer_vat_code else ""}
+                            {f"<strong>Įmonės kodas:</strong> {buyer_registration_code}<br>" if buyer_registration_code else ""}
+                            {f"<strong>PVM kodas:</strong> {buyer_vat_code}<br>" if buyer_vat_code else ""}
                         </div>
                     </div>
 
@@ -152,7 +153,7 @@ class InvoiceGenerator:
                         </tr>
                         {"".join(f"""
                         <tr>
-                            <td>{item.name}</td>
+                            <td>{item.name.capitalize()}</td>
                             <td>{item.quantity}</td>
                             <td>{item.price:.2f} EUR</td>
                             <td>{item.price * item.quantity:.2f} EUR</td>
@@ -171,7 +172,7 @@ class InvoiceGenerator:
                     </table>
 
                     <div class="sum-in-words">
-                        Suma žodžiais: {invoice.sum_in_words}.
+                        <strong>Suma žodžiais:</strong><br> {invoice.sum_in_words.capitalize()}.
                     </div>
                 </div>
             </body>

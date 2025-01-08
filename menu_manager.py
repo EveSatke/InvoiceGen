@@ -6,16 +6,6 @@ from utils.helpers import get_menu_input
 from colorama import Fore
 
 
-URL = "https://www.registrucentras.lt/aduomenys/?byla=JAR_IREGISTRUOTI.csv"
-
-
-
-async def start():
-    # print("Downloading companies list file... Please wait...")
-    # downloader = CompanyListDownloader(URL, FILENAME)
-    # await downloader.download()
-    ...
-
 class MenuOption(Enum):
     ADD_INVOICE = "Add a new invoice"
     VIEW_INVOICES = "View all invoices"

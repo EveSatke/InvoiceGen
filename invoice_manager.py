@@ -1,10 +1,10 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional
-from colorama import Fore, Style
+from colorama import Fore
 from company_searcher import CompanySearcher
-from constants import CREATE_PHYSICAL_PERSON_HEADER, DIVIDER, GENERATE_INVOICE_HEADER, INVOICE_SUMMARY_HEADER, MENU_PROMPT, MENU_PROMPT_WITH_EXIT, SEARCH_JURIDICAL_ENTITY_HEADER
-from input_handler import get_item_input, get_user_input_juridical_buyer, get_user_input_physical_person_buyer
+from constants import CREATE_PHYSICAL_PERSON_HEADER, DIVIDER, GENERATE_INVOICE_HEADER, INVOICE_SUMMARY_HEADER, MENU_PROMPT, MENU_PROMPT_WITH_EXIT, SEARCH_JURIDICAL_ENTITY_HEADER, VIEW_INVOICES_HEADER
+from input_handler import get_items_from_user, get_juridical_buyer_from_user, get_physical_buyer_from_user
 from invoice_data_manager import InvoiceDataManager
 from invoice_generator import InvoiceGenerator
 from models.juridical_entity import JuridicalEntity
@@ -13,6 +13,7 @@ from models.supplier import Supplier
 from supplier_manager import SupplierManager
 from utils.helpers import get_confirmation, get_menu_input, get_text_input, print_invoice_summary
 from models.invoice import Invoice
+from tabulate import tabulate
 
 class Buyer(Enum):
     COMPANY = "Juridical entity"
@@ -115,18 +116,18 @@ class InvoiceManager:
                 return
 
             selected_entity = results[int(choice)-1]
-            juridical_entity = get_user_input_juridical_buyer(selected_entity.name, selected_entity.address, selected_entity.registration_code)
+            juridical_entity = get_juridical_buyer_from_user(selected_entity.name, selected_entity.address, selected_entity.registration_code)
             return juridical_entity
 
     def _handle_physical_person_buyer(self) -> PhysicalPerson:
         print(f"\n{CREATE_PHYSICAL_PERSON_HEADER}\n{DIVIDER}")
-        physical_person = get_user_input_physical_person_buyer()
+        physical_person = get_physical_buyer_from_user()
         return physical_person
     
     def _add_invoice_items(self, supplier: Supplier):
         print(f"\n{GENERATE_INVOICE_HEADER}\n{DIVIDER}")
         print(f"{Fore.YELLOW}Step 3:{Fore.RESET} Add Items")
-        items = get_item_input(supplier)
+        items = get_items_from_user(supplier)
         return items
     
     def _get_invoice_summary(self, invoice: Invoice):
@@ -135,13 +136,29 @@ class InvoiceManager:
 
     def view_invoices(self):
         invoices = self.invoice_data_manager.load_invoices()
-        for index, invoice in enumerate(invoices, start=1):
-            print(
-                f"{Fore.CYAN}Invoice #{index}:{Style.RESET_ALL} {invoice.invoice_number} | "
-                f"{Fore.CYAN}Date:{Style.RESET_ALL} {invoice.invoice_date} | "
-                f"{Fore.CYAN}Supplier:{Style.RESET_ALL} {invoice.supplier.entity.name} | "
-                f"{Fore.CYAN}Registration Code:{Style.RESET_ALL} {invoice.supplier.entity.registration_code} | "
-                f"{Fore.CYAN}Buyer:{Style.RESET_ALL} {invoice.buyer.name} | "
-            )
-            print(f"{Fore.MAGENTA}{'-' * 80}{Style.RESET_ALL}")
-        input(f"{Fore.YELLOW}\nPress Enter to continue...{Style.RESET_ALL}")
+        print(f"\n{VIEW_INVOICES_HEADER}\n{DIVIDER}")
+        if not invoices:
+            print(f"{Fore.YELLOW}No invoices found.{Fore.RESET}")
+            return
+        
+        table_data = []
+        for invoice in invoices:
+            table_data.append([
+                f"{invoice.invoice_number}",
+                f"{invoice.invoice_date}",
+                f"{invoice.supplier.entity.name}",
+                f"{invoice.buyer.name}",
+                f"{invoice.total_amount:.2f} EUR"
+            ])
+
+        headers = [
+        f"{Fore.YELLOW}Invoice No.{Fore.RESET}",
+        f"{Fore.YELLOW}Date{Fore.RESET}",
+        f"{Fore.YELLOW}Supplier{Fore.RESET}",
+        f"{Fore.YELLOW}Buyer{Fore.RESET}",
+        f"{Fore.YELLOW}Total Amount{Fore.RESET}"
+        ]
+            
+        print(tabulate(table_data, headers=headers, tablefmt="fancy_grid"))
+        
+        input(f"{Fore.YELLOW}\nPress Enter to continue...{Fore.RESET}")

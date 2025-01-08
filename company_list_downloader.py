@@ -1,4 +1,5 @@
 import aiohttp
+from colorama import Fore
 
 class CompanyListDownloader:
     def __init__(self, url, filename):
@@ -17,7 +18,7 @@ class CompanyListDownloader:
                                 break
                             file.write(chunk)
 
-            print(f"File downloaded successfully and saved as {self.filename}")
+            print(f"{Fore.GREEN}File downloaded successfully and saved as {self.filename}{Fore.RESET}")
         except aiohttp.ClientError as e:
-            print(f"An error occurred: {e}")
+            print(f"{Fore.RED}An error occurred: {e}{Fore.RESET}")
     

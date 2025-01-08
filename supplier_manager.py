@@ -3,7 +3,7 @@ from colorama import Fore
 import logging
 from company_searcher import CompanySearcher
 from constants import CREATE_SUPPLIER_HEADER, DELETE_SUPPLIER_HEADER, INPUT_BETWEEN_VALUES, MENU_PROMPT, INPUT_MUST_BE_NUMBER, MENU_PROMPT_WITH_EXIT, SEARCH_RESULTS_HEADER, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_DELETED_MESSAGE, SUPPLIER_LIST_HEADER, SUPPLIER_NOT_DELETED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
-from input_handler import get_user_input_VAT_bank_info, get_user_input_supplier
+from input_handler import get_VAT_bank_info_from_user, get_supplier_input_from_user
 from json_handler import JsonHandler
 from models.juridical_entity import JuridicalEntity
 from models.supplier import Supplier
@@ -103,13 +103,13 @@ class SupplierManager:
             f"Address: {selected_supplier.address}\n"
         )
         print(SUPPLIER_ADDITIONAL_INFO)
-        supplier = get_user_input_VAT_bank_info(selected_supplier.name, selected_supplier.address, selected_supplier.registration_code)
+        supplier = get_VAT_bank_info_from_user(selected_supplier.name, selected_supplier.address, selected_supplier.registration_code)
         self._save_supplier(supplier)
 
 
     def _handle_add_supplier(self):
         print(f"\n{CREATE_SUPPLIER_HEADER}\n{DIVIDER}")
-        supplier = get_user_input_supplier()
+        supplier = get_supplier_input_from_user()
         self._save_supplier(supplier)
 
     def _save_supplier(self, supplier: Supplier):
