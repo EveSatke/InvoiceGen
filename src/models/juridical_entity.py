@@ -1,4 +1,4 @@
-from models.entity import Entity
+from .entity import Entity
 
 class JuridicalEntity(Entity):
     def __init__(self, name: str, address: str, registration_code: int, vat_payer_code: str | None = None):

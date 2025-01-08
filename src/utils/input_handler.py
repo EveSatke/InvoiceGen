@@ -2,7 +2,7 @@ from models.item import Item
 from models.juridical_entity import JuridicalEntity
 from models.physical_person import PhysicalPerson
 from models.supplier import Supplier
-from utils.helpers import get_confirmation, get_float_input, get_number_input, get_text_input, get_vat_code
+from .helpers import get_confirmation, get_float_input, get_number_input, get_text_input, get_vat_code
 
 
 def get_supplier_input_from_user():

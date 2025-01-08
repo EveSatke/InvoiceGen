@@ -1,5 +1,5 @@
 from colorama import Fore
-from constants import INPUT_BETWEEN_VALUES, INPUT_MUST_BE_FLOAT, INPUT_MUST_BE_NUMBER, INPUT_NOT_EMPTY
+from .constants import INPUT_BETWEEN_VALUES, INPUT_MUST_BE_FLOAT, INPUT_MUST_BE_NUMBER, INPUT_NOT_EMPTY
 from models.item import Item
 from models.invoice import Invoice
 from models.juridical_entity import JuridicalEntity
@@ -85,7 +85,7 @@ def print_buyer_details(buyer: JuridicalEntity | PhysicalPerson):
 def print_items_details(items: list[Item]):
     print(f"\n{Fore.YELLOW}Items:{Fore.RESET}")
     for index, item in enumerate(items, start=1):
-        print(f"{index}. {item.name} - {item.quantity} X {item.price} EUR = {item.price * item.quantity} EUR")
+        print(f"{index}. {item.name} - {item.quantity} X {item.price} EUR = {round(item.price * item.quantity, 2)} EUR")
 
 def print_invoice_summary(invoice: Invoice):
     print_supplier_details(invoice.supplier)

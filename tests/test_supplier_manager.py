@@ -1,10 +1,10 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from supplier_manager import SupplierManager
-from json_handler import JsonHandler
-from company_searcher import CompanySearcher
-from models.supplier import Supplier
-from models.juridical_entity import JuridicalEntity
+from src.supplier_manager import SupplierManager
+from src.utils.json_handler import JsonHandler
+from src.utils.company_searcher import CompanySearcher
+from src.models.supplier import Supplier
+from src.models.juridical_entity import JuridicalEntity
 import uuid
 
 @pytest.fixture

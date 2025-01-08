@@ -1,7 +1,7 @@
-from models.item import Item
-from models.juridical_entity import JuridicalEntity
-from models.physical_person import PhysicalPerson
-from models.supplier import Supplier
+from .item import Item
+from .juridical_entity import JuridicalEntity
+from .physical_person import PhysicalPerson
+from .supplier import Supplier
 from num2words import num2words
 
 

@@ -1,5 +1,5 @@
-from models.juridical_entity import JuridicalEntity
-from models.physical_person import PhysicalPerson
+from .juridical_entity import JuridicalEntity
+from .physical_person import PhysicalPerson
 import uuid
 
 

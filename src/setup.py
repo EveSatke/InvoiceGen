@@ -3,22 +3,22 @@ import os
 import time
 
 from colorama import Fore
-from company_list_downloader import CompanyListDownloader
-from company_searcher import CompanySearcher
-from csv_reader import CsvReader
+from utils.company_list_downloader import CompanyListDownloader
+from utils.company_searcher import CompanySearcher
+from utils.csv_reader import CsvReader
 from invoice_data_manager import InvoiceDataManager
 from invoice_manager import InvoiceManager
 from menu_manager import MenuManager
 from supplier_manager import SupplierManager
-from json_handler import JsonHandler
+from utils.json_handler import JsonHandler
 from invoice_generator import InvoiceGenerator
 
 URL = "https://www.registrucentras.lt/aduomenys/?byla=JAR_IREGISTRUOTI.csv"
-FILENAME = "data/JAR_IREGISTRUOTI.csv"
-BASE_DIRECTORY = "data/invoices"
-INVOICE_FILENAME = "data/invoices.json"
+FILENAME = "src/data/JAR_IREGISTRUOTI.csv"
+BASE_DIRECTORY = "src/data/invoices"
+INVOICE_FILENAME = "src/data/invoices.json"
 
-CACHE_FILE = "data/last_download_time.txt"
+CACHE_FILE = "src/data/last_download_time.txt"
 """Cache duration 24 hours in seconds"""
 CACHE_DURATION = 86400  
 

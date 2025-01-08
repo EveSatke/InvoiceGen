@@ -1,11 +1,11 @@
 import pytest
 from unittest.mock import MagicMock
-from invoice_data_manager import InvoiceDataManager
-from models.invoice import Invoice
-from models.item import Item
-from models.juridical_entity import JuridicalEntity
-from models.physical_person import PhysicalPerson
-from models.supplier import Supplier
+from src.invoice_data_manager import InvoiceDataManager
+from src.invoice_manager import Invoice
+from src.models.item import Item
+from src.models.juridical_entity import JuridicalEntity
+from src.models.physical_person import PhysicalPerson
+from src.models.supplier import Supplier
 import uuid
 
 @pytest.fixture

@@ -1,5 +1,5 @@
 from enum import Enum
-from constants import INPUT_BETWEEN_VALUES, INVOICE_GENERATOR_TITLE, MENU_PROMPT
+from utils.constants import INPUT_BETWEEN_VALUES, INVOICE_GENERATOR_TITLE, MENU_PROMPT
 from invoice_manager import InvoiceManager
 from supplier_manager import SupplierManager
 from utils.helpers import get_menu_input

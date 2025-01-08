@@ -1,4 +1,4 @@
-from models.entity import Entity
+from .entity import Entity
 
 class PhysicalPerson(Entity):
     def __init__(self, name: str, surname: str, address: str, vat_payer_code: str | None = None):

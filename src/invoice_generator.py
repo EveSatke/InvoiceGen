@@ -133,7 +133,7 @@ class InvoiceGenerator:
                             <strong>Įmonės kodas:</strong> {invoice.supplier.entity.registration_code if isinstance(invoice.supplier.entity, JuridicalEntity) else ""}<br>
                             <strong>Sąskaitos numeris:</strong> {invoice.supplier.bank_account}<br>
                             <strong>Bankas:</strong> {invoice.supplier.bank_name.capitalize()}<br>
-                            {"PVM kodas: " + supplier_vat_code if supplier_vat_code else ""}<br>
+                            {"<strong>PVM kodas:</strong> " + supplier_vat_code if supplier_vat_code else ""}<br>
                         </div>
                         <div class="buyer-details">
                             <div class="section-title">Pirkėjas:</div>

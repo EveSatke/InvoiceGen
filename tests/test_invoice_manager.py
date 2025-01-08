@@ -1,13 +1,13 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from invoice_manager import InvoiceManager
-from supplier_manager import SupplierManager
-from company_searcher import CompanySearcher
-from invoice_generator import InvoiceGenerator
-from invoice_data_manager import InvoiceDataManager
-from models.supplier import Supplier
-from models.juridical_entity import JuridicalEntity
-from models.item import Item
+from src.invoice_manager import InvoiceManager
+from src.supplier_manager import SupplierManager
+from src.utils.company_searcher import CompanySearcher
+from src.invoice_generator import InvoiceGenerator
+from src.invoice_data_manager import InvoiceDataManager
+from src.models.supplier import Supplier
+from src.models.juridical_entity import JuridicalEntity
+from src.models.item import Item
 import uuid
 from datetime import datetime
 

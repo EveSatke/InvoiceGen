@@ -1,10 +1,10 @@
 from enum import Enum
 from colorama import Fore
 import logging
-from company_searcher import CompanySearcher
-from constants import CREATE_SUPPLIER_HEADER, DELETE_SUPPLIER_HEADER, INPUT_BETWEEN_VALUES, MENU_PROMPT, INPUT_MUST_BE_NUMBER, MENU_PROMPT_WITH_EXIT, SEARCH_RESULTS_HEADER, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_DELETED_MESSAGE, SUPPLIER_LIST_HEADER, SUPPLIER_NOT_DELETED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
-from input_handler import get_VAT_bank_info_from_user, get_supplier_input_from_user
-from json_handler import JsonHandler
+from utils.company_searcher import CompanySearcher
+from utils.constants import CREATE_SUPPLIER_HEADER, DELETE_SUPPLIER_HEADER, INPUT_BETWEEN_VALUES, MENU_PROMPT, MENU_PROMPT_WITH_EXIT, NO_RESULTS_FOUND, NO_SUPPLIERS_FOUND, PRESS_ENTER, SEARCH_PROMPT, SEARCH_SUPPLIER_HEADER, SELECT_SUPPLIER_HEADER, SUPPLIER_ADDITIONAL_INFO, SUPPLIER_CREATED_MESSAGE, SUPPLIER_DELETED_MESSAGE, SUPPLIER_LIST_HEADER, SUPPLIER_NOT_DELETED_MESSAGE, SUPPLIER_NOT_SAVED_MESSAGE, UNEXPECTED_ERROR, SUPPLIER_MANAGER_HEADER, DIVIDER
+from utils.input_handler import get_VAT_bank_info_from_user, get_supplier_input_from_user
+from utils.json_handler import JsonHandler
 from models.juridical_entity import JuridicalEntity
 from models.supplier import Supplier
 from utils.helpers import get_confirmation, get_menu_input, get_text_input
@@ -18,7 +18,7 @@ class SubMenuOption(Enum):
     EXIT = "Return to main menu"
 
 class SupplierManager:
-    FILE_PATH = "data/suppliers.json"
+    FILE_PATH = "src/data/suppliers.json"
 
     def __init__(self, json_handler: JsonHandler, company_searcher: CompanySearcher):
         self.json_handler = json_handler
@@ -78,11 +78,11 @@ class SupplierManager:
     def _handle_search_add_supplier(self):
         while True:
             print(f"\n{SEARCH_SUPPLIER_HEADER}\n{DIVIDER}")
-            search_term = get_text_input("Enter supplier name or registration code to search: ")
+            search_term = get_text_input(SEARCH_PROMPT)
             print("Searching...\n")
             results = self.company_searcher.search(search_term)
             if not results:
-                print("No results found. Please try a different search term.")
+                print(NO_RESULTS_FOUND)
                 continue
 
             self.company_searcher.display_results(results)
@@ -122,14 +122,17 @@ class SupplierManager:
 
     def _handle_view_suppliers(self):
         print(f"\n{SUPPLIER_LIST_HEADER}\n{DIVIDER}")
+        if not self.suppliers:
+            print(NO_SUPPLIERS_FOUND)
+            return
         self.display_suppliers()
-        input(f"{Fore.YELLOW}Press Enter to continue...{Fore.RESET}")
+        input(PRESS_ENTER)
 
 
     def _handle_delete_supplier(self):
         print(f"\n{DELETE_SUPPLIER_HEADER}\n{DIVIDER}")
         if not self.suppliers:
-            print("No suppliers found.")
+            print(NO_SUPPLIERS_FOUND)
             return
         
         self.display_suppliers()

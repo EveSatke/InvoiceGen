@@ -1,4 +1,4 @@
-from json_handler import JsonHandler
+from utils.json_handler import JsonHandler
 from models.invoice import Invoice
 from models.item import Item
 from models.juridical_entity import JuridicalEntity

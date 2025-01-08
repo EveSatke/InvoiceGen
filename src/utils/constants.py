@@ -31,5 +31,9 @@ SUPPLIER_NOT_SAVED_MESSAGE = f"{Fore.RED}\nSupplier not saved. Operation cancell
 SUPPLIER_ADDITIONAL_INFO = f"{Fore.YELLOW}\nAdditional Information:{Fore.RESET}"
 SUPPLIER_DELETED_MESSAGE = f"{Fore.GREEN}\nSupplier deleted successfully!{Fore.RESET}"
 SUPPLIER_NOT_DELETED_MESSAGE = f"{Fore.RED}\nSupplier not deleted. Operation cancelled.{Fore.RESET}"
+SEARCH_PROMPT = f"{Fore.YELLOW}Enter supplier name or registration code to search: {Fore.RESET}"
+NO_RESULTS_FOUND = f"{Fore.YELLOW}No results found. Please try a different search term.{Fore.RESET}"
+PRESS_ENTER = f"{Fore.YELLOW}Press Enter to continue...{Fore.RESET}"
+NO_SUPPLIERS_FOUND = f"{Fore.YELLOW}No suppliers found.{Fore.RESET}"
 
  

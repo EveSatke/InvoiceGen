@@ -2,9 +2,9 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 from colorama import Fore
-from company_searcher import CompanySearcher
-from constants import CREATE_PHYSICAL_PERSON_HEADER, DIVIDER, GENERATE_INVOICE_HEADER, INVOICE_SUMMARY_HEADER, MENU_PROMPT, MENU_PROMPT_WITH_EXIT, SEARCH_JURIDICAL_ENTITY_HEADER, VIEW_INVOICES_HEADER
-from input_handler import get_items_from_user, get_juridical_buyer_from_user, get_physical_buyer_from_user
+from utils.company_searcher import CompanySearcher
+from utils.constants import CREATE_PHYSICAL_PERSON_HEADER, DIVIDER, GENERATE_INVOICE_HEADER, INVOICE_SUMMARY_HEADER, MENU_PROMPT, MENU_PROMPT_WITH_EXIT, NO_RESULTS_FOUND, PRESS_ENTER, SEARCH_JURIDICAL_ENTITY_HEADER, VIEW_INVOICES_HEADER
+from utils.input_handler import get_items_from_user, get_juridical_buyer_from_user, get_physical_buyer_from_user
 from invoice_data_manager import InvoiceDataManager
 from invoice_generator import InvoiceGenerator
 from models.juridical_entity import JuridicalEntity
@@ -107,7 +107,7 @@ class InvoiceManager:
             print("Searching...\n")
             results = self.company_searcher.search(search_term)
             if not results:
-                print("No results found. Please try a different search term.")
+                print(NO_RESULTS_FOUND)
                 continue
 
             self.company_searcher.display_results(results)
@@ -161,4 +161,4 @@ class InvoiceManager:
             
         print(tabulate(table_data, headers=headers, tablefmt="fancy_grid"))
         
-        input(f"{Fore.YELLOW}\nPress Enter to continue...{Fore.RESET}")
+        input(PRESS_ENTER)

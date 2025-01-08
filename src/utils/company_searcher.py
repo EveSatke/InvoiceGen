@@ -1,5 +1,5 @@
-from constants import DIVIDER, SEARCH_RESULTS_HEADER
 from models.juridical_entity import JuridicalEntity
+from .constants import DIVIDER, SEARCH_RESULTS_HEADER
 
 
 class CompanySearcher:
