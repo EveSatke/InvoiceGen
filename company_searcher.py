@@ -1,3 +1,4 @@
+from constants import DIVIDER, SEARCH_RESULTS_HEADER
 from models.juridical_entity import JuridicalEntity
 
 
@@ -22,3 +23,8 @@ class CompanySearcher:
                 )
                 results.append(company)
         return results
+    
+    def display_results(self, results: list):
+        print(f"{SEARCH_RESULTS_HEADER}\n{DIVIDER}")
+        for index, company in enumerate(results, start=1):
+            print(f"{index}. Name: {company.name} | Registration code: {company.registration_code} | Address: {company.address}")

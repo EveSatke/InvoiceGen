@@ -4,21 +4,11 @@ import uuid
 
 
 class Supplier:
-    def __init__(self, entity: JuridicalEntity | PhysicalPerson, bank_account: str, bank_name: str):
-        self.id = uuid.uuid4()
+    def __init__(self, entity: JuridicalEntity, bank_account: str, bank_name: str, id: str):
+        self.id = uuid.UUID(id) if id else uuid.uuid4()
         self.entity = entity
         self.bank_account = bank_account
         self.bank_name = bank_name
-
-    @property
-    def entity(self):
-        return self._entity
-    
-    @entity.setter
-    def entity(self, value: JuridicalEntity | PhysicalPerson):
-        if not isinstance(value, (JuridicalEntity, PhysicalPerson)):
-            raise ValueError("Entity must be a JuridicalEntity or PhysicalPerson")
-        self._entity = value
 
     @property
     def bank_account(self):

@@ -42,9 +42,9 @@ class JuridicalEntity(Entity):
             "name": self.name,
             "address": self.address,
             "registration_code": self.registration_code,
-            "vat_code": self.vat_payer_code
+            "vat_payer_code": self.vat_payer_code
         }
 
     def get_entity_info(self):
-        return (f"Company Name: {self.company_name}, Code: {self.registration_code}, "
+        return (f"Company Name: {self.name}, Code: {self.registration_code}, "
                 f"Address: {self.address}, {self.get_vat_info()}")

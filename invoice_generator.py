@@ -1,70 +1,184 @@
-from enum import Enum
-from constants import INPUT_BETWEEN_VALUES, INVOICE_GENERATOR_TITLE, MENU_PROMPT
-from supplier_manager import SupplierManager
-from utils.helpers import get_menu_input
 from colorama import Fore
+from weasyprint import HTML
+from models.invoice import Invoice
+import os
+from models.juridical_entity import JuridicalEntity
+from datetime import datetime
 
-
-URL = "https://www.registrucentras.lt/aduomenys/?byla=JAR_IREGISTRUOTI.csv"
-
-
-
-async def start():
-    # print("Downloading companies list file... Please wait...")
-    # downloader = CompanyListDownloader(URL, FILENAME)
-    # await downloader.download()
-    # print(get_user_input())
-    ...
-
-class MenuOption(Enum):
-    ADD_INVOICE = "Add a new invoice"
-    VIEW_INVOICES = "View all invoices"
-    MANAGE_SUPPLIERS = "Manage supplier profiles"
-    EXIT = "Exit"
 
 class InvoiceGenerator:
-    def __init__(self, supplier_manager: SupplierManager):
-        self.supplier_manager = supplier_manager
-        self.menu_options = {
-            MenuOption.ADD_INVOICE: self._handle_add_invoice,
-            MenuOption.VIEW_INVOICES: self._handle_view_invoices,
-            MenuOption.MANAGE_SUPPLIERS: self._handle_manage_suppliers,
-            MenuOption.EXIT: self._handle_exit
-        }
+    def __init__(self, base_directory: str):
+        self.base_directory = base_directory
 
-    def main_menu(self):
-        while True:
-            self._display_menu()
-            choice = get_menu_input(MENU_PROMPT.format(max_option=len(MenuOption)), 1, len(MenuOption))
-            try:
-                selected_option = list(MenuOption)[choice-1]
-                if self.menu_options[selected_option]() is False:
-                    break
-            except (IndexError, ValueError):
-                print(INPUT_BETWEEN_VALUES.format(max_option=len(MenuOption), min_value=1))
+    def generate_invoice_pdf(self, invoice: Invoice):
+        try:
+            supplier_name = invoice.supplier.entity.name
+            supplier_directory = os.path.join(self.base_directory, supplier_name)
 
+            # Create directory for the supplier if it doesn't exist
+            os.makedirs(supplier_directory, exist_ok=True)
 
-    def _display_menu(self):
-        print(INVOICE_GENERATOR_TITLE)
-        for index, option in enumerate(MenuOption, start=1):
-            print(f"{index}. {option.value}")
+            # Define the filename using the invoice number
+            invoice_date = datetime.now().strftime("%Y-%m-%d")
+            filename = f"Saskaita_{invoice.invoice_number}_{invoice_date}.pdf"
+            file_path = os.path.join(supplier_directory, filename)
 
+            # Generate the PDF
+            supplier_vat_code = invoice.supplier.entity.vat_payer_code
+            buyer_vat_code = getattr(invoice.buyer, 'vat_payer_code', None)
+            buyer_registration_code = getattr(invoice.buyer, 'registration_code', None)
+            buyer_surname = getattr(invoice.buyer, 'surname', None)
 
-    def _handle_add_invoice(self):
-        return True
+            html_content = f"""
+            <html>
+            <head>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        font-size: 14px;
+                        margin: 0;
+                        padding: 0;
+                        color: #333;
+                        width: 100%;
+                        height: auto;
+                        display: flex;
+                        justify-content: center;
+                        align-items: flex-start;
+                        background: #fff
+                        
+                    }}
+                    .invoice-box {{
+                        width: 800px;
+                        height: 980px;
+                        padding: 20px;
+                        background: #fff;
+                        box-sizing: border-box;
+                        overflow: hidden;
+                        border: 1px solid #ddd;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        box-sizing: border-box;
+                    }}
+                    .invoice-header {{
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 40px;
+                    }}
+                    .invoice-header .title {{
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: #333;
+                    }}
+                    .invoice-header .details {{
+                        text-align: right;
+                    }}
+                    .invoice-section {{
+                        margin-bottom: 20px;
+                        display: flex;
+                        justify-content: space-between;
+                    }}
+                    .invoice-section .section-title {{
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                        text-transform: uppercase;
+                    }}
+                    table {{
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 20px;
+                    }}
+                    table, th, td {{
+                        border: 1px solid #ddd;
+                    }}
+                    th, td {{
+                        padding: 8px;
+                        text-align: left;
+                    }}
+                    th {{
+                        background-color: #f2f2f2;
+                        font-weight: bold;
+                    }}
+                    .total-row {{
+                        font-weight: bold;
+                        text-align: right;
+                    }}
+                    .total-row td {{
+                        border-top: 2px solid #ddd;
+                    }}
+                    .total-row-title {{
+                        text-align: right;
+                        padding-right: 8px;
+                    }}
+                    .sum-in-words {{
+                        margin-top: 10px;
+                        font-style: italic;
+                        font-size: 13px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="invoice-box">
+                    <div class="invoice-header">
+                        <div class="title">{"PVM sąskaita - faktūra" if supplier_vat_code else "Sąskaita - faktūra"}</div>
+                        <div class="details">
+                            Sąskaitos Nr.: {invoice.invoice_number}<br>
+                            Data: {invoice.invoice_date}
+                        </div>
+                    </div>
 
-    def _handle_view_invoices(self):
-        return True
+                    <div class="invoice-section">
+                        <div>
+                            <div class="section-title">Tiekėjas:</div>
+                            <strong>{invoice.supplier.entity.name}</strong><br>
+                            {invoice.supplier.entity.address}<br>
+                            <strong>Įmonės kodas:</strong> {invoice.supplier.entity.registration_code if isinstance(invoice.supplier.entity, JuridicalEntity) else ""}<br>
+                            <strong>Sąskaitos numeris:</strong> {invoice.supplier.bank_account}<br>
+                            <strong>Bankas:</strong> {invoice.supplier.bank_name.capitalize()}<br>
+                            {"PVM kodas: " + supplier_vat_code if supplier_vat_code else ""}<br>
+                        </div>
+                        <div class="buyer-details">
+                            <div class="section-title">Pirkėjas:</div>
+                            <strong>{invoice.buyer.name.capitalize()} {buyer_surname.capitalize() if buyer_surname else ""}</strong><br>
+                            {invoice.buyer.address}<br>
+                            {f"<strong>Įmonės kodas:</strong> {buyer_registration_code}<br>" if buyer_registration_code else ""}
+                            {f"<strong>PVM kodas:</strong> {buyer_vat_code}<br>" if buyer_vat_code else ""}
+                        </div>
+                    </div>
 
-    def _handle_manage_suppliers(self):
-        self.supplier_manager.sub_menu()
+                    <table>
+                        <tr>
+                            <th>Aprašymas</th>
+                            <th>Kiekis</th>
+                            <th>Vieneto kaina</th>
+                            <th>Suma</th>
+                        </tr>
+                        {"".join(f"""
+                        <tr>
+                            <td>{item.name.capitalize()}</td>
+                            <td>{item.quantity}</td>
+                            <td>{item.price:.2f} EUR</td>
+                            <td>{item.price * item.quantity:.2f} EUR</td>
+                        </tr>
+                        """ for item in invoice.items)}
+                        {f"""
+                        <tr class="total-row">
+                            <td colspan="3" class="total-row-title">PVM suma:</td>
+                            <td>{invoice.total_vat:.2f} EUR</td>
+                        </tr>
+                        """ if supplier_vat_code else ""}
+                        <tr class="total-row">
+                            <td colspan="3" class="total-row-title">Iš viso:</td>
+                            <td>{invoice.total_amount:.2f} EUR</td>
+                        </tr>
+                    </table>
 
-
-    def _handle_exit(self):
-        print(f"{Fore.YELLOW}Exiting...\n{Fore.RESET}")
-        return False
-    
-
-    
-
-    
+                    <div class="sum-in-words">
+                        <strong>Suma žodžiais:</strong><br> {invoice.sum_in_words.capitalize()}.
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            HTML(string=html_content).write_pdf(file_path)
+            print(f"{Fore.GREEN}\nInvoice created successfully at {file_path}.{Fore.RESET}")
+        except Exception as e:
+            print(f"{Fore.RED}\nAn error occurred while creating the invoice: {e}{Fore.RESET}")

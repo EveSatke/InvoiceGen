@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class Entity(ABC):
-    def __init__(self, vat_payer_code=None):
+    def __init__(self, vat_payer_code: str | None = None):
         self.vat_payer_code = vat_payer_code
 
     @property
@@ -9,7 +9,7 @@ class Entity(ABC):
         return self._vat_payer_code
     
     @vat_payer_code.setter
-    def vat_payer_code(self, value: str):
+    def vat_payer_code(self, value: str | None):
         if value is not None and not isinstance(value, str):
             raise ValueError("VAT Payer Code must be a string")
         self._vat_payer_code = value

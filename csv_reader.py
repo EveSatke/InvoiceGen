@@ -1,6 +1,5 @@
 import csv
 
-
 class CsvReader:
     def __init__(self, filename: str, delimiter: str = '|'):
         self.filename = filename
