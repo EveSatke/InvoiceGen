@@ -25,8 +25,10 @@ def invoice_manager():
         invoice_data_manager
     )
 
-@patch('invoice_manager.get_confirmation', return_value=True)
-def test_generate_invoice(mock_get_confirmation, invoice_manager):
+# Mock both get_confirmation and input
+@patch('builtins.input', return_value='y')
+@patch('src.utils.helpers.get_confirmation', return_value=True)
+def test_generate_invoice(mock_get_confirmation, mock_input, invoice_manager):
     supplier = Supplier(
         entity=JuridicalEntity("Test Supplier", "Test Address", 123456789),
         bank_account="LT123456789",
@@ -70,8 +72,10 @@ def test_generate_invoice_no_buyer(invoice_manager):
     invoice_manager.invoice_generator.generate_invoice_pdf.assert_not_called()
     invoice_manager.invoice_data_manager.save_invoice.assert_not_called()
 
-@patch('invoice_manager.get_confirmation', return_value=False)
-def test_generate_invoice_no_items(mock_get_confirmation, invoice_manager):
+# Mock both get_confirmation and input
+@patch('builtins.input', return_value='n')
+@patch('src.utils.helpers.get_confirmation', return_value=False)
+def test_generate_invoice_no_items(mock_get_confirmation, mock_input, invoice_manager):
     supplier = Supplier(
         entity=JuridicalEntity("Test Supplier", "Test Address", 123456789),
         bank_account="LT123456789",
@@ -101,8 +105,10 @@ def test_generate_invoice_number(invoice_manager):
 
     assert invoice_number == f"{datetime.now().year}-1"
 
-@patch('invoice_manager.get_confirmation', return_value=True)
-def test_get_invoice_summary(mock_get_confirmation, invoice_manager):
+# Mock both get_confirmation and input
+@patch('builtins.input', return_value='y')
+@patch('src.utils.helpers.get_confirmation', return_value=True)
+def test_get_invoice_summary(mock_get_confirmation, mock_input, invoice_manager):
     supplier = Supplier(
         entity=JuridicalEntity("Test Supplier", "Test Address", 123456789),
         bank_account="LT123456789",

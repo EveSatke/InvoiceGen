@@ -54,9 +54,9 @@ InvoiceGen is a Python-based application designed to manage and generate invoice
 - `invoice_generator.py`: Contains logic for generating invoice PDFs.
 - `supplier_manager.py`: Manages supplier profiles.
 - `invoice_manager.py`: Manages invoice creation and viewing.
-- `data/`: Directory containing JSON files for invoices and suppliers.
-- `models/`: Contains data models for entities like `Invoice`, `Supplier`, etc.
-- `utils/`: Utility functions and helpers.
+- `src/data/`: Directory containing JSON files for invoices and suppliers.
+- `src/models/`: Contains data models for entities like `Invoice`, `Supplier`, etc.
+- `src/utils/`: Utility functions and helpers.
 
 ## Contributing
 
@@ -65,3 +65,40 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
+
+## Testing
+
+### Running Tests
+
+1. **Setup**:
+
+   - Ensure you have pytest installed:
+     ```bash
+     pip install pytest
+     ```
+   - Make sure you're in the project root directory
+
+2. **Run All Tests**:
+
+   ```bash
+   PYTHONPATH=$PYTHONPATH:$(pwd)/src pytest tests -v
+   ```
+
+3. **Run Specific Test File**:
+
+   ```bash
+   PYTHONPATH=$PYTHONPATH:$(pwd)/src pytest tests/test_invoice_manager.py -v
+   ```
+
+4. **Test Files**:
+   - `tests/test_invoice_manager.py`: Tests for invoice generation and management
+   - `tests/test_supplier_manager.py`: Tests for supplier management
+   - `tests/test_invoice_data_manager.py`: Tests for invoice data handling
+
+### Test Configuration
+
+The project uses the following test configuration:
+
+- `pytest.ini`: Configures the Python path for tests
+- `tests/conftest.py`: Contains pytest fixtures and setup
+- All test files are located in the `tests/` directory

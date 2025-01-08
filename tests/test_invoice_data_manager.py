@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import MagicMock
 from src.invoice_data_manager import InvoiceDataManager
-from src.invoice_manager import Invoice
+from src.models.invoice import Invoice
 from src.models.item import Item
 from src.models.juridical_entity import JuridicalEntity
 from src.models.physical_person import PhysicalPerson
