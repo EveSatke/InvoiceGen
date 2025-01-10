@@ -1,5 +1,4 @@
 from .juridical_entity import JuridicalEntity
-from .physical_person import PhysicalPerson
 import uuid
 
 

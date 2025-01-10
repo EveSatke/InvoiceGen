@@ -52,6 +52,7 @@ class MenuManager:
 
     def _handle_manage_suppliers(self):
         self.supplier_manager.sub_menu()
+        return True
 
 
     def _handle_exit(self):
